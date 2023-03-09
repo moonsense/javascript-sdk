@@ -1,10 +1,13 @@
 import { ClientConfig } from './ClientConfig';
+import { common } from './models/generated/protos';
+import { DataPlaneClient } from './services/DataPlaneClient';
 
 export class Client {
     public static readonly DEFAULT_ROOT_DOMAIN = 'moonsense.cloud';
     public static readonly DEFAULT_PROTOCOL = 'https';
     public static readonly DEFAULT_REGION = 'us-central1.gcp';
 
+    private dataPlaneClient: DataPlaneClient;
 
     constructor(
         private config: ClientConfig,
@@ -26,5 +29,13 @@ export class Client {
         if (!config.defaultRegion || config.defaultRegion.length <= 0){
             this.config.defaultRegion = Client.DEFAULT_REGION;
         }
+
+        this.dataPlaneClient = new DataPlaneClient(this.config);
+    }
+
+    public whoAmI(): Promise<common.TokenSelfResponse> {
+        return this.dataPlaneClient.whoAmI();
     }
 }
+
+export default Client;

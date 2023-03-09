@@ -1,9 +1,11 @@
 {
-  "name": "moonsense-api-client",
+  "name": "@moonsense/moonsense-api-client",
   "version": "0.0.1",
   "description": "A Javascript/Typescript client for accessing the Moonsense APIs.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,10 +20,17 @@
   "homepage": "https://github.com/moonsense/javascript-sdk#readme",
   "devDependencies": {
     "@types/jest": "^29.4.0",
+    "@types/node-fetch": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "jest": "^29.5.0",
     "jest-junit": "^15.0.0",
     "ts-jest": "^29.0.5"
+  },
+  "peerDependencies": {
+    "protobufjs": "^7.2.2"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.9"
   }
 }
