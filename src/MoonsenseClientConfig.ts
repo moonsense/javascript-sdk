@@ -4,7 +4,7 @@
  * not provided will be read from the environment if possible. If not
  * provided in the environment, the default values will be used.
  */
-export interface ClientConfig {
+export interface MoonsenseClientConfig {
     /**
      * API secret token generated from the Moonsense Cloud web console.
      * 

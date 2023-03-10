@@ -1,18 +1,8 @@
 import fetch, {
-    Headers,
-    Request,
     HeadersInit,
     Response,
     RequestInit,
 } from 'node-fetch';
-
-// if (!globalThis.fetch) {
-//     globalThis.fetch = fetch;
-//     globalThis.Headers = Headers;
-//     globalThis.Request = Request;
-//     globalThis.Response = Response;
-//     globalThis.RequestInit = RequestInit;
-// }
 
 export class ApiClient {
 
@@ -40,7 +30,7 @@ export class ApiClient {
 
     protected processResponse(resp: Response): Promise<ArrayBuffer>{
         if (!resp.ok) {
-            throw new Error('request failed');
+            throw new Error(`request failed: ${resp.status} ${resp.statusText}: ${resp.url}`);
         }
 
         return resp.arrayBuffer();
@@ -49,6 +39,14 @@ export class ApiClient {
     public get(url: string): Promise<Response> {
         const useUrl = this.buildUrl(url);
         const useOptions = this.getOptions('GET');
+
+        return fetch(useUrl, useOptions);
+    }
+
+    public post(url: string, body: Uint8Array): Promise<Response> {
+        const useUrl = this.buildUrl(url);
+        const useOptions = this.getOptions('POST');
+        useOptions.body = body;
 
         return fetch(useUrl, useOptions);
     }

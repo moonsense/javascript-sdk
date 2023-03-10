@@ -1,4 +1,4 @@
-import { ClientConfig } from '../ClientConfig';
+import { MoonsenseClientConfig } from '../MoonsenseClientConfig';
 import { controlplane } from '../models/generated/protos';
 import { ApiClient } from './ApiClient';
 
@@ -6,7 +6,7 @@ export class ControlPlaneClient extends ApiClient{
     private version = '/v2';
 
     constructor(
-        baseConfig: ClientConfig,
+        baseConfig: MoonsenseClientConfig,
     ) {
         super(
             `${baseConfig.protocol}://api.${baseConfig.rootDomain}`, 

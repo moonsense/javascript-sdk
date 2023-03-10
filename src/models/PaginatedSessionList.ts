@@ -13,7 +13,7 @@ export class PaginatedSessionList {
         sessionList: dataplane.SessionListResponse,
     ) {
         this.client = client;
-        this.currentPageConfig = config;
+        this.currentPageConfig = JSON.parse(JSON.stringify(config)); // clone the config
         this.sessionList = sessionList;
     }
 
