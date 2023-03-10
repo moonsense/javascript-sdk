@@ -1,0 +1,6 @@
+/.eslintrc.json 
+/.github
+/Earthfile
+/jest.config.js
+/src
+/test
