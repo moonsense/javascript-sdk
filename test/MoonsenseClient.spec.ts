@@ -19,7 +19,7 @@ describe('Client', () => {
     const mockRequest = (responseBody?: ArrayBufferLike, responseStatus = 200) => {
 
         mockFetch.mockResolvedValue({
-            ok: true,
+            ok: responseStatus >= 200 && responseStatus < 300,
             status: responseStatus,
             arrayBuffer: () => {
                 return Promise.resolve(responseBody);
@@ -52,6 +52,11 @@ describe('Client', () => {
             expect(client['config'].rootDomain).toEqual('domain');
             expect(client['config'].protocol).toEqual('http');
             expect(client['config'].defaultRegion).toEqual('region');
+
+            delete process.env.MOONSENSE_SECRET_TOKEN;
+            delete process.env.MOONSENSE_ROOT_DOMAIN;
+            delete process.env.MOONSENSE_PROTOCOL;
+            delete process.env.MOONSENSE_DEFAULT_REGION;
         });
     });
 
@@ -93,6 +98,14 @@ describe('Client', () => {
     });
 
     describe('data plane', () => {
+        it('should handle bad response status', async () => {
+            mockRequest(undefined, 500);
+
+            const client = new MoonsenseClient({secretToken: 'test'});
+            await expect(client.whoAmI()).rejects.toThrow();
+            
+        })
+
         it('should run whoami', async () => {
             const response = common.TokenSelfResponse.encode({
                 scopes: 'q',
@@ -383,6 +396,16 @@ describe('Client', () => {
             const client = new MoonsenseClient({secretToken: 'test'});
             const dataPlaneClient = await client['findDataRegion']('abc', 'us-central1');
             expect(dataPlaneClient['baseUrl']).toBe('https://us-central1.data-api.moonsense.cloud');
+        });
+
+        it('should throw error on missing region', async () => {
+            const response = dataplane.Session.encode({
+                sessionId: 'abc',
+            }).finish();
+            mockRequest(response);
+
+            const client = new MoonsenseClient({secretToken: 'test'});
+            await expect(client['findDataRegion']('abc')).rejects.toThrow();
         });
 
         it('should list session features', async () => {

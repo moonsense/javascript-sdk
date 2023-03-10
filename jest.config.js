@@ -12,7 +12,11 @@ module.exports = {
   collectCoverageFrom: [
     'src/**',
   ],
-  coveragePathIgnorePatterns: [],
+  coveragePathIgnorePatterns: [
+    'index.ts',
+    'generated',
+    'test',
+  ],
   coverageThreshold: {
     global: {
       branches: 85,
