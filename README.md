@@ -31,17 +31,18 @@ console.log(me);
 const maxPages = 3;
 let page = 0;
 
+let paginated = await client.listSessions();
 do {
-    const paginated = await client.listSessions();
-    const sessions = paginated.sessions;
-    page++;
-    console.log(`Page ${page}`, sessions);
+    console.log(`Page ${page}`, paginated.sessions);
 
-    if (!paginated.hasMoreSessions){
-        break;
+    if (paginated.hasMoreSessions) {
+        page++;
+        paginated = await paginated.nextPage();
+    } else {
+        break
     }
 
-} while(page < maxPages)
+} while(page < maxPages);
 
 // Fetch features for a specific session. Specifying the 
 // region the session is in will result in a faster lookup

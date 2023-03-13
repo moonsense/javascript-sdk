@@ -161,7 +161,8 @@ export class MoonsenseClient {
      * Gets the list of features for the specified session.
      * 
      * @param sessionId The ID of the session to fetch features for
-     * @param region The region to fetch the session from. If not provided, the default region will be used. 
+     * @param region The region to fetch the session from. If not provided, a describe call will be made
+     * to determine the correct region. 
      */
     public async listSessionFeatures(sessionId: string, region?: string): Promise<dataplane.IFeatureListResponse> {
         const dataPlaneClient = await this.findDataRegion(sessionId, region);
@@ -170,19 +171,35 @@ export class MoonsenseClient {
 
     /**
      * Gets a list of signals for the specified session.
+     * 
      * @param sessionId The ID of the session to fetch signals for
-     * @param region The region to fetch the session from. If not provided, the default region will be used. 
+     * @param region The region to fetch the session from. If not provided, a describe call will be made
+     * to determine the correct region. 
      */
     public async listSessionSignals(sessionId: string, region?: string): Promise<dataplane.ISignalsResponse> {
         const dataPlaneClient = await this.findDataRegion(sessionId, region);
         return dataPlaneClient.listSessionSignals(sessionId);
     }
     
+    /**
+     * Reads all the bundle data for the specified Session that were collected so far.
+     * 
+     * @param sessionId The ID of the session to fetch bundles for
+     * @param region The region to fetch the session from. If not provided, a describe call will be made
+     * to determine the correct region.
+     */
     public async readSession(sessionId: string, region?: string): Promise<bundle.ISealedBundle[]> {
         const dataPlaneClient = await this.findDataRegion(sessionId, region);
         return dataPlaneClient.readSession(sessionId);
     }
 
+    /**
+     * Replaces the labels for the specified session.
+     * 
+     * @param sessionId The ID of the session to update
+     * @param labels The labels to set on the session
+     * @returns 
+     */
     public updateSessionLabels(sessionId: string, labels: string[]): Promise<void> {
         return this.getDataRegionClient(this.config.defaultRegion!).updateSessionLabels(sessionId, labels);
     }
