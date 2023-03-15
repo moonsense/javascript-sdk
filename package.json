@@ -1,19 +1,37 @@
 {
-  "name": "moonsense-api-client",
-  "version": "0.0.1",
+  "name": "@moonsense/javascript-sdk",
+  "version": "0.1.0",
   "description": "A Javascript/Typescript client for accessing the Moonsense APIs.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc && cp -R ./src/models/generated ./dist/models/generated",
+    "test": "jest --coverage --ci --detectOpenHandles"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/moonsense/javascript-sdk.git"
   },
-  "author": "",
+  "author": "Moonsense, Inc.",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/moonsense/javascript-sdk/issues"
   },
-  "homepage": "https://github.com/moonsense/javascript-sdk#readme"
+  "homepage": "https://github.com/moonsense/javascript-sdk#readme",
+  "devDependencies": {
+    "@types/jest": "^29.4.0",
+    "@types/node-fetch": "^2.6.2",
+    "@types/tar-stream": "^2.2.2",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "jest": "^29.5.0",
+    "jest-junit": "^15.0.0",
+    "ts-jest": "^29.0.5"
+  },
+  "dependencies": {
+    "fflate": "^0.7.4",
+    "node-fetch": "^2.6.9",
+    "tar-stream": "^3.0.0",
+    "protobufjs": "^7.2.2"
+  }
 }

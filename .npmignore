@@ -1,0 +1,7 @@
+/.eslintrc.json 
+/.github
+/Earthfile
+/jest.config.js
+/tsconfig.json
+/src
+/test
