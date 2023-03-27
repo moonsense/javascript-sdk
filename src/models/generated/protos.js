@@ -268,6 +268,8 @@ $root.bundle = (function() {
          * @property {Object.<string,feature.IFeature>|null} [features] Bundle features
          * @property {Array.<bundle.IInputChange>|null} [inputChangeData] Bundle inputChangeData
          * @property {Array.<bundle.IFormSubmitEvent>|null} [formSubmitEvents] Bundle formSubmitEvents
+         * @property {Array.<bundle.IContextMenuEvent>|null} [contextMenuEvents] Bundle contextMenuEvents
+         * @property {bundle.IFrameRateEvent|null} [frameRateEvent] Bundle frameRateEvent
          */
 
         /**
@@ -299,6 +301,7 @@ $root.bundle = (function() {
             this.features = {};
             this.inputChangeData = [];
             this.formSubmitEvents = [];
+            this.contextMenuEvents = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -499,6 +502,22 @@ $root.bundle = (function() {
         Bundle.prototype.formSubmitEvents = $util.emptyArray;
 
         /**
+         * Bundle contextMenuEvents.
+         * @member {Array.<bundle.IContextMenuEvent>} contextMenuEvents
+         * @memberof bundle.Bundle
+         * @instance
+         */
+        Bundle.prototype.contextMenuEvents = $util.emptyArray;
+
+        /**
+         * Bundle frameRateEvent.
+         * @member {bundle.IFrameRateEvent|null|undefined} frameRateEvent
+         * @memberof bundle.Bundle
+         * @instance
+         */
+        Bundle.prototype.frameRateEvent = null;
+
+        /**
          * Creates a new Bundle instance using the specified properties.
          * @function create
          * @memberof bundle.Bundle
@@ -592,6 +611,11 @@ $root.bundle = (function() {
             if (message.formSubmitEvents != null && message.formSubmitEvents.length)
                 for (var i = 0; i < message.formSubmitEvents.length; ++i)
                     $root.bundle.FormSubmitEvent.encode(message.formSubmitEvents[i], writer.uint32(/* id 32, wireType 2 =*/258).fork()).ldelim();
+            if (message.contextMenuEvents != null && message.contextMenuEvents.length)
+                for (var i = 0; i < message.contextMenuEvents.length; ++i)
+                    $root.bundle.ContextMenuEvent.encode(message.contextMenuEvents[i], writer.uint32(/* id 33, wireType 2 =*/266).fork()).ldelim();
+            if (message.frameRateEvent != null && Object.hasOwnProperty.call(message, "frameRateEvent"))
+                $root.bundle.FrameRateEvent.encode(message.frameRateEvent, writer.uint32(/* id 34, wireType 2 =*/274).fork()).ldelim();
             return writer;
         };
 
@@ -741,6 +765,14 @@ $root.bundle = (function() {
                     if (!(message.formSubmitEvents && message.formSubmitEvents.length))
                         message.formSubmitEvents = [];
                     message.formSubmitEvents.push($root.bundle.FormSubmitEvent.decode(reader, reader.uint32()));
+                    break;
+                case 33:
+                    if (!(message.contextMenuEvents && message.contextMenuEvents.length))
+                        message.contextMenuEvents = [];
+                    message.contextMenuEvents.push($root.bundle.ContextMenuEvent.decode(reader, reader.uint32()));
+                    break;
+                case 34:
+                    message.frameRateEvent = $root.bundle.FrameRateEvent.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4421,6 +4453,250 @@ $root.bundle = (function() {
         return FormSubmitEvent;
     })();
 
+    bundle.ContextMenuEvent = (function() {
+
+        /**
+         * Properties of a ContextMenuEvent.
+         * @memberof bundle
+         * @interface IContextMenuEvent
+         * @property {number|null} [determinedAt] ContextMenuEvent determinedAt
+         * @property {bundle.ContextMenuEvent.ContextMenuStatus|null} [contextMenuStatus] ContextMenuEvent contextMenuStatus
+         * @property {bundle.ITargetElement|null} [target] ContextMenuEvent target
+         */
+
+        /**
+         * Constructs a new ContextMenuEvent.
+         * @memberof bundle
+         * @classdesc Represents a ContextMenuEvent.
+         * @implements IContextMenuEvent
+         * @constructor
+         * @param {bundle.IContextMenuEvent=} [properties] Properties to set
+         */
+        function ContextMenuEvent(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * ContextMenuEvent determinedAt.
+         * @member {number} determinedAt
+         * @memberof bundle.ContextMenuEvent
+         * @instance
+         */
+        ContextMenuEvent.prototype.determinedAt = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * ContextMenuEvent contextMenuStatus.
+         * @member {bundle.ContextMenuEvent.ContextMenuStatus} contextMenuStatus
+         * @memberof bundle.ContextMenuEvent
+         * @instance
+         */
+        ContextMenuEvent.prototype.contextMenuStatus = 0;
+
+        /**
+         * ContextMenuEvent target.
+         * @member {bundle.ITargetElement|null|undefined} target
+         * @memberof bundle.ContextMenuEvent
+         * @instance
+         */
+        ContextMenuEvent.prototype.target = null;
+
+        /**
+         * Creates a new ContextMenuEvent instance using the specified properties.
+         * @function create
+         * @memberof bundle.ContextMenuEvent
+         * @static
+         * @param {bundle.IContextMenuEvent=} [properties] Properties to set
+         * @returns {bundle.ContextMenuEvent} ContextMenuEvent instance
+         */
+        ContextMenuEvent.create = function create(properties) {
+            return new ContextMenuEvent(properties);
+        };
+
+        /**
+         * Encodes the specified ContextMenuEvent message. Does not implicitly {@link bundle.ContextMenuEvent.verify|verify} messages.
+         * @function encode
+         * @memberof bundle.ContextMenuEvent
+         * @static
+         * @param {bundle.IContextMenuEvent} message ContextMenuEvent message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        ContextMenuEvent.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.determinedAt != null && Object.hasOwnProperty.call(message, "determinedAt"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int64(message.determinedAt);
+            if (message.contextMenuStatus != null && Object.hasOwnProperty.call(message, "contextMenuStatus"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.contextMenuStatus);
+            if (message.target != null && Object.hasOwnProperty.call(message, "target"))
+                $root.bundle.TargetElement.encode(message.target, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Decodes a ContextMenuEvent message from the specified reader or buffer.
+         * @function decode
+         * @memberof bundle.ContextMenuEvent
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {bundle.ContextMenuEvent} ContextMenuEvent
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        ContextMenuEvent.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.bundle.ContextMenuEvent();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.determinedAt = reader.int64();
+                    break;
+                case 2:
+                    message.contextMenuStatus = reader.int32();
+                    break;
+                case 3:
+                    message.target = $root.bundle.TargetElement.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * ContextMenuStatus enum.
+         * @name bundle.ContextMenuEvent.ContextMenuStatus
+         * @enum {number}
+         * @property {number} UNKNOWN_CONTEXT_MENU_STATUS=0 UNKNOWN_CONTEXT_MENU_STATUS value
+         * @property {number} OPEN=1 OPEN value
+         * @property {number} CLOSED=2 CLOSED value
+         */
+        ContextMenuEvent.ContextMenuStatus = (function() {
+            var valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "UNKNOWN_CONTEXT_MENU_STATUS"] = 0;
+            values[valuesById[1] = "OPEN"] = 1;
+            values[valuesById[2] = "CLOSED"] = 2;
+            return values;
+        })();
+
+        return ContextMenuEvent;
+    })();
+
+    bundle.FrameRateEvent = (function() {
+
+        /**
+         * Properties of a FrameRateEvent.
+         * @memberof bundle
+         * @interface IFrameRateEvent
+         * @property {number|null} [determinedAt] FrameRateEvent determinedAt
+         * @property {number|null} [framesPerSecond] FrameRateEvent framesPerSecond
+         */
+
+        /**
+         * Constructs a new FrameRateEvent.
+         * @memberof bundle
+         * @classdesc Represents a FrameRateEvent.
+         * @implements IFrameRateEvent
+         * @constructor
+         * @param {bundle.IFrameRateEvent=} [properties] Properties to set
+         */
+        function FrameRateEvent(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * FrameRateEvent determinedAt.
+         * @member {number} determinedAt
+         * @memberof bundle.FrameRateEvent
+         * @instance
+         */
+        FrameRateEvent.prototype.determinedAt = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * FrameRateEvent framesPerSecond.
+         * @member {number} framesPerSecond
+         * @memberof bundle.FrameRateEvent
+         * @instance
+         */
+        FrameRateEvent.prototype.framesPerSecond = 0;
+
+        /**
+         * Creates a new FrameRateEvent instance using the specified properties.
+         * @function create
+         * @memberof bundle.FrameRateEvent
+         * @static
+         * @param {bundle.IFrameRateEvent=} [properties] Properties to set
+         * @returns {bundle.FrameRateEvent} FrameRateEvent instance
+         */
+        FrameRateEvent.create = function create(properties) {
+            return new FrameRateEvent(properties);
+        };
+
+        /**
+         * Encodes the specified FrameRateEvent message. Does not implicitly {@link bundle.FrameRateEvent.verify|verify} messages.
+         * @function encode
+         * @memberof bundle.FrameRateEvent
+         * @static
+         * @param {bundle.IFrameRateEvent} message FrameRateEvent message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        FrameRateEvent.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.determinedAt != null && Object.hasOwnProperty.call(message, "determinedAt"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int64(message.determinedAt);
+            if (message.framesPerSecond != null && Object.hasOwnProperty.call(message, "framesPerSecond"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.framesPerSecond);
+            return writer;
+        };
+
+        /**
+         * Decodes a FrameRateEvent message from the specified reader or buffer.
+         * @function decode
+         * @memberof bundle.FrameRateEvent
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {bundle.FrameRateEvent} FrameRateEvent
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        FrameRateEvent.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.bundle.FrameRateEvent();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.determinedAt = reader.int64();
+                    break;
+                case 2:
+                    message.framesPerSecond = reader.float();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return FrameRateEvent;
+    })();
+
     return bundle;
 })();
 
@@ -4835,6 +5111,8 @@ $root.common = (function() {
      * @property {number} CLICK=20 CLICK value
      * @property {number} INPUT_CHANGE=21 INPUT_CHANGE value
      * @property {number} FORM_SUBMIT=22 FORM_SUBMIT value
+     * @property {number} CONTEXT_MENU=23 CONTEXT_MENU value
+     * @property {number} FRAME_RATE=24 FRAME_RATE value
      */
     common.SensorType = (function() {
         var valuesById = {}, values = Object.create(valuesById);
@@ -4855,6 +5133,8 @@ $root.common = (function() {
         values[valuesById[20] = "CLICK"] = 20;
         values[valuesById[21] = "INPUT_CHANGE"] = 21;
         values[valuesById[22] = "FORM_SUBMIT"] = 22;
+        values[valuesById[23] = "CONTEXT_MENU"] = 23;
+        values[valuesById[24] = "FRAME_RATE"] = 24;
         return values;
     })();
 
@@ -9279,6 +9559,197 @@ $root.dataplane = (function() {
         return WebhookPayload;
     })();
 
+    dataplane.Journey = (function() {
+
+        /**
+         * Properties of a Journey.
+         * @memberof dataplane
+         * @interface IJourney
+         * @property {string|null} [journeyId] Journey journeyId
+         * @property {string|null} [appId] Journey appId
+         * @property {google.protobuf.ITimestamp|null} [oldestEvent] Journey oldestEvent
+         * @property {google.protobuf.ITimestamp|null} [newestEvent] Journey newestEvent
+         * @property {google.protobuf.ITimestamp|null} [createdAt] Journey createdAt
+         * @property {number|null} [sessionCount] Journey sessionCount
+         * @property {common.DevicePlatform|null} [primaryPlatform] Journey primaryPlatform
+         * @property {string|null} [primaryRegionId] Journey primaryRegionId
+         */
+
+        /**
+         * Constructs a new Journey.
+         * @memberof dataplane
+         * @classdesc Represents a Journey.
+         * @implements IJourney
+         * @constructor
+         * @param {dataplane.IJourney=} [properties] Properties to set
+         */
+        function Journey(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Journey journeyId.
+         * @member {string} journeyId
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.journeyId = "";
+
+        /**
+         * Journey appId.
+         * @member {string} appId
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.appId = "";
+
+        /**
+         * Journey oldestEvent.
+         * @member {google.protobuf.ITimestamp|null|undefined} oldestEvent
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.oldestEvent = null;
+
+        /**
+         * Journey newestEvent.
+         * @member {google.protobuf.ITimestamp|null|undefined} newestEvent
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.newestEvent = null;
+
+        /**
+         * Journey createdAt.
+         * @member {google.protobuf.ITimestamp|null|undefined} createdAt
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.createdAt = null;
+
+        /**
+         * Journey sessionCount.
+         * @member {number} sessionCount
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.sessionCount = 0;
+
+        /**
+         * Journey primaryPlatform.
+         * @member {common.DevicePlatform} primaryPlatform
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.primaryPlatform = 0;
+
+        /**
+         * Journey primaryRegionId.
+         * @member {string} primaryRegionId
+         * @memberof dataplane.Journey
+         * @instance
+         */
+        Journey.prototype.primaryRegionId = "";
+
+        /**
+         * Creates a new Journey instance using the specified properties.
+         * @function create
+         * @memberof dataplane.Journey
+         * @static
+         * @param {dataplane.IJourney=} [properties] Properties to set
+         * @returns {dataplane.Journey} Journey instance
+         */
+        Journey.create = function create(properties) {
+            return new Journey(properties);
+        };
+
+        /**
+         * Encodes the specified Journey message. Does not implicitly {@link dataplane.Journey.verify|verify} messages.
+         * @function encode
+         * @memberof dataplane.Journey
+         * @static
+         * @param {dataplane.IJourney} message Journey message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Journey.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.journeyId != null && Object.hasOwnProperty.call(message, "journeyId"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.journeyId);
+            if (message.appId != null && Object.hasOwnProperty.call(message, "appId"))
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.appId);
+            if (message.oldestEvent != null && Object.hasOwnProperty.call(message, "oldestEvent"))
+                $root.google.protobuf.Timestamp.encode(message.oldestEvent, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.newestEvent != null && Object.hasOwnProperty.call(message, "newestEvent"))
+                $root.google.protobuf.Timestamp.encode(message.newestEvent, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.createdAt != null && Object.hasOwnProperty.call(message, "createdAt"))
+                $root.google.protobuf.Timestamp.encode(message.createdAt, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.sessionCount != null && Object.hasOwnProperty.call(message, "sessionCount"))
+                writer.uint32(/* id 6, wireType 0 =*/48).int32(message.sessionCount);
+            if (message.primaryPlatform != null && Object.hasOwnProperty.call(message, "primaryPlatform"))
+                writer.uint32(/* id 7, wireType 0 =*/56).int32(message.primaryPlatform);
+            if (message.primaryRegionId != null && Object.hasOwnProperty.call(message, "primaryRegionId"))
+                writer.uint32(/* id 8, wireType 2 =*/66).string(message.primaryRegionId);
+            return writer;
+        };
+
+        /**
+         * Decodes a Journey message from the specified reader or buffer.
+         * @function decode
+         * @memberof dataplane.Journey
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {dataplane.Journey} Journey
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Journey.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.dataplane.Journey();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.journeyId = reader.string();
+                    break;
+                case 2:
+                    message.appId = reader.string();
+                    break;
+                case 3:
+                    message.oldestEvent = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.newestEvent = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                    break;
+                case 5:
+                    message.createdAt = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                    break;
+                case 6:
+                    message.sessionCount = reader.int32();
+                    break;
+                case 7:
+                    message.primaryPlatform = reader.int32();
+                    break;
+                case 8:
+                    message.primaryRegionId = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return Journey;
+    })();
+
     dataplane.SessionListResponse = (function() {
 
         /**
@@ -9481,6 +9952,228 @@ $root.dataplane = (function() {
         };
 
         return SessionDeleteResponse;
+    })();
+
+    dataplane.JourneyListResponse = (function() {
+
+        /**
+         * Properties of a JourneyListResponse.
+         * @memberof dataplane
+         * @interface IJourneyListResponse
+         * @property {Array.<dataplane.IJourney>|null} [journeys] JourneyListResponse journeys
+         * @property {pagination.IPaginationResponse|null} [pagination] JourneyListResponse pagination
+         */
+
+        /**
+         * Constructs a new JourneyListResponse.
+         * @memberof dataplane
+         * @classdesc Represents a JourneyListResponse.
+         * @implements IJourneyListResponse
+         * @constructor
+         * @param {dataplane.IJourneyListResponse=} [properties] Properties to set
+         */
+        function JourneyListResponse(properties) {
+            this.journeys = [];
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * JourneyListResponse journeys.
+         * @member {Array.<dataplane.IJourney>} journeys
+         * @memberof dataplane.JourneyListResponse
+         * @instance
+         */
+        JourneyListResponse.prototype.journeys = $util.emptyArray;
+
+        /**
+         * JourneyListResponse pagination.
+         * @member {pagination.IPaginationResponse|null|undefined} pagination
+         * @memberof dataplane.JourneyListResponse
+         * @instance
+         */
+        JourneyListResponse.prototype.pagination = null;
+
+        /**
+         * Creates a new JourneyListResponse instance using the specified properties.
+         * @function create
+         * @memberof dataplane.JourneyListResponse
+         * @static
+         * @param {dataplane.IJourneyListResponse=} [properties] Properties to set
+         * @returns {dataplane.JourneyListResponse} JourneyListResponse instance
+         */
+        JourneyListResponse.create = function create(properties) {
+            return new JourneyListResponse(properties);
+        };
+
+        /**
+         * Encodes the specified JourneyListResponse message. Does not implicitly {@link dataplane.JourneyListResponse.verify|verify} messages.
+         * @function encode
+         * @memberof dataplane.JourneyListResponse
+         * @static
+         * @param {dataplane.IJourneyListResponse} message JourneyListResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        JourneyListResponse.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.journeys != null && message.journeys.length)
+                for (var i = 0; i < message.journeys.length; ++i)
+                    $root.dataplane.Journey.encode(message.journeys[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.pagination != null && Object.hasOwnProperty.call(message, "pagination"))
+                $root.pagination.PaginationResponse.encode(message.pagination, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Decodes a JourneyListResponse message from the specified reader or buffer.
+         * @function decode
+         * @memberof dataplane.JourneyListResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {dataplane.JourneyListResponse} JourneyListResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        JourneyListResponse.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.dataplane.JourneyListResponse();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    if (!(message.journeys && message.journeys.length))
+                        message.journeys = [];
+                    message.journeys.push($root.dataplane.Journey.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.pagination = $root.pagination.PaginationResponse.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return JourneyListResponse;
+    })();
+
+    dataplane.JourneyDetailResponse = (function() {
+
+        /**
+         * Properties of a JourneyDetailResponse.
+         * @memberof dataplane
+         * @interface IJourneyDetailResponse
+         * @property {dataplane.IJourney|null} [journey] JourneyDetailResponse journey
+         * @property {Array.<dataplane.ISession>|null} [sessions] JourneyDetailResponse sessions
+         */
+
+        /**
+         * Constructs a new JourneyDetailResponse.
+         * @memberof dataplane
+         * @classdesc Represents a JourneyDetailResponse.
+         * @implements IJourneyDetailResponse
+         * @constructor
+         * @param {dataplane.IJourneyDetailResponse=} [properties] Properties to set
+         */
+        function JourneyDetailResponse(properties) {
+            this.sessions = [];
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * JourneyDetailResponse journey.
+         * @member {dataplane.IJourney|null|undefined} journey
+         * @memberof dataplane.JourneyDetailResponse
+         * @instance
+         */
+        JourneyDetailResponse.prototype.journey = null;
+
+        /**
+         * JourneyDetailResponse sessions.
+         * @member {Array.<dataplane.ISession>} sessions
+         * @memberof dataplane.JourneyDetailResponse
+         * @instance
+         */
+        JourneyDetailResponse.prototype.sessions = $util.emptyArray;
+
+        /**
+         * Creates a new JourneyDetailResponse instance using the specified properties.
+         * @function create
+         * @memberof dataplane.JourneyDetailResponse
+         * @static
+         * @param {dataplane.IJourneyDetailResponse=} [properties] Properties to set
+         * @returns {dataplane.JourneyDetailResponse} JourneyDetailResponse instance
+         */
+        JourneyDetailResponse.create = function create(properties) {
+            return new JourneyDetailResponse(properties);
+        };
+
+        /**
+         * Encodes the specified JourneyDetailResponse message. Does not implicitly {@link dataplane.JourneyDetailResponse.verify|verify} messages.
+         * @function encode
+         * @memberof dataplane.JourneyDetailResponse
+         * @static
+         * @param {dataplane.IJourneyDetailResponse} message JourneyDetailResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        JourneyDetailResponse.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.journey != null && Object.hasOwnProperty.call(message, "journey"))
+                $root.dataplane.Journey.encode(message.journey, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.sessions != null && message.sessions.length)
+                for (var i = 0; i < message.sessions.length; ++i)
+                    $root.dataplane.Session.encode(message.sessions[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Decodes a JourneyDetailResponse message from the specified reader or buffer.
+         * @function decode
+         * @memberof dataplane.JourneyDetailResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {dataplane.JourneyDetailResponse} JourneyDetailResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        JourneyDetailResponse.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.dataplane.JourneyDetailResponse();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.journey = $root.dataplane.Journey.decode(reader, reader.uint32());
+                    break;
+                case 2:
+                    if (!(message.sessions && message.sessions.length))
+                        message.sessions = [];
+                    message.sessions.push($root.dataplane.Session.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return JourneyDetailResponse;
     })();
 
     dataplane.ChunksListResponse = (function() {
@@ -10473,6 +11166,414 @@ $root.dataplane = (function() {
         };
 
         return FeatureListResponse;
+    })();
+
+    dataplane.SessionFeaturesResponse = (function() {
+
+        /**
+         * Properties of a SessionFeaturesResponse.
+         * @memberof dataplane
+         * @interface ISessionFeaturesResponse
+         * @property {string|null} [sessionId] SessionFeaturesResponse sessionId
+         * @property {Object.<string,feature.IFeature>|null} [clientSdk] SessionFeaturesResponse clientSdk
+         * @property {Object.<string,feature.IFeature>|null} [cloudNetwork] SessionFeaturesResponse cloudNetwork
+         * @property {Object.<string,feature.IFeature>|null} [cloudBehavioral] SessionFeaturesResponse cloudBehavioral
+         */
+
+        /**
+         * Constructs a new SessionFeaturesResponse.
+         * @memberof dataplane
+         * @classdesc Represents a SessionFeaturesResponse.
+         * @implements ISessionFeaturesResponse
+         * @constructor
+         * @param {dataplane.ISessionFeaturesResponse=} [properties] Properties to set
+         */
+        function SessionFeaturesResponse(properties) {
+            this.clientSdk = {};
+            this.cloudNetwork = {};
+            this.cloudBehavioral = {};
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SessionFeaturesResponse sessionId.
+         * @member {string} sessionId
+         * @memberof dataplane.SessionFeaturesResponse
+         * @instance
+         */
+        SessionFeaturesResponse.prototype.sessionId = "";
+
+        /**
+         * SessionFeaturesResponse clientSdk.
+         * @member {Object.<string,feature.IFeature>} clientSdk
+         * @memberof dataplane.SessionFeaturesResponse
+         * @instance
+         */
+        SessionFeaturesResponse.prototype.clientSdk = $util.emptyObject;
+
+        /**
+         * SessionFeaturesResponse cloudNetwork.
+         * @member {Object.<string,feature.IFeature>} cloudNetwork
+         * @memberof dataplane.SessionFeaturesResponse
+         * @instance
+         */
+        SessionFeaturesResponse.prototype.cloudNetwork = $util.emptyObject;
+
+        /**
+         * SessionFeaturesResponse cloudBehavioral.
+         * @member {Object.<string,feature.IFeature>} cloudBehavioral
+         * @memberof dataplane.SessionFeaturesResponse
+         * @instance
+         */
+        SessionFeaturesResponse.prototype.cloudBehavioral = $util.emptyObject;
+
+        /**
+         * Creates a new SessionFeaturesResponse instance using the specified properties.
+         * @function create
+         * @memberof dataplane.SessionFeaturesResponse
+         * @static
+         * @param {dataplane.ISessionFeaturesResponse=} [properties] Properties to set
+         * @returns {dataplane.SessionFeaturesResponse} SessionFeaturesResponse instance
+         */
+        SessionFeaturesResponse.create = function create(properties) {
+            return new SessionFeaturesResponse(properties);
+        };
+
+        /**
+         * Encodes the specified SessionFeaturesResponse message. Does not implicitly {@link dataplane.SessionFeaturesResponse.verify|verify} messages.
+         * @function encode
+         * @memberof dataplane.SessionFeaturesResponse
+         * @static
+         * @param {dataplane.ISessionFeaturesResponse} message SessionFeaturesResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SessionFeaturesResponse.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.sessionId != null && Object.hasOwnProperty.call(message, "sessionId"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.sessionId);
+            if (message.clientSdk != null && Object.hasOwnProperty.call(message, "clientSdk"))
+                for (var keys = Object.keys(message.clientSdk), i = 0; i < keys.length; ++i) {
+                    writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                    $root.feature.Feature.encode(message.clientSdk[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                }
+            if (message.cloudNetwork != null && Object.hasOwnProperty.call(message, "cloudNetwork"))
+                for (var keys = Object.keys(message.cloudNetwork), i = 0; i < keys.length; ++i) {
+                    writer.uint32(/* id 3, wireType 2 =*/26).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                    $root.feature.Feature.encode(message.cloudNetwork[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                }
+            if (message.cloudBehavioral != null && Object.hasOwnProperty.call(message, "cloudBehavioral"))
+                for (var keys = Object.keys(message.cloudBehavioral), i = 0; i < keys.length; ++i) {
+                    writer.uint32(/* id 4, wireType 2 =*/34).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                    $root.feature.Feature.encode(message.cloudBehavioral[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                }
+            return writer;
+        };
+
+        /**
+         * Decodes a SessionFeaturesResponse message from the specified reader or buffer.
+         * @function decode
+         * @memberof dataplane.SessionFeaturesResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {dataplane.SessionFeaturesResponse} SessionFeaturesResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SessionFeaturesResponse.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.dataplane.SessionFeaturesResponse(), key, value;
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.sessionId = reader.string();
+                    break;
+                case 2:
+                    if (message.clientSdk === $util.emptyObject)
+                        message.clientSdk = {};
+                    var end2 = reader.uint32() + reader.pos;
+                    key = "";
+                    value = null;
+                    while (reader.pos < end2) {
+                        var tag2 = reader.uint32();
+                        switch (tag2 >>> 3) {
+                        case 1:
+                            key = reader.string();
+                            break;
+                        case 2:
+                            value = $root.feature.Feature.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag2 & 7);
+                            break;
+                        }
+                    }
+                    message.clientSdk[key] = value;
+                    break;
+                case 3:
+                    if (message.cloudNetwork === $util.emptyObject)
+                        message.cloudNetwork = {};
+                    var end2 = reader.uint32() + reader.pos;
+                    key = "";
+                    value = null;
+                    while (reader.pos < end2) {
+                        var tag2 = reader.uint32();
+                        switch (tag2 >>> 3) {
+                        case 1:
+                            key = reader.string();
+                            break;
+                        case 2:
+                            value = $root.feature.Feature.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag2 & 7);
+                            break;
+                        }
+                    }
+                    message.cloudNetwork[key] = value;
+                    break;
+                case 4:
+                    if (message.cloudBehavioral === $util.emptyObject)
+                        message.cloudBehavioral = {};
+                    var end2 = reader.uint32() + reader.pos;
+                    key = "";
+                    value = null;
+                    while (reader.pos < end2) {
+                        var tag2 = reader.uint32();
+                        switch (tag2 >>> 3) {
+                        case 1:
+                            key = reader.string();
+                            break;
+                        case 2:
+                            value = $root.feature.Feature.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag2 & 7);
+                            break;
+                        }
+                    }
+                    message.cloudBehavioral[key] = value;
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return SessionFeaturesResponse;
+    })();
+
+    dataplane.JourneyFeaturesResponse = (function() {
+
+        /**
+         * Properties of a JourneyFeaturesResponse.
+         * @memberof dataplane
+         * @interface IJourneyFeaturesResponse
+         * @property {string|null} [journeyId] JourneyFeaturesResponse journeyId
+         * @property {Object.<string,feature.IFeature>|null} [clientSdk] JourneyFeaturesResponse clientSdk
+         * @property {Object.<string,feature.IFeature>|null} [cloudNetwork] JourneyFeaturesResponse cloudNetwork
+         * @property {Object.<string,feature.IFeature>|null} [cloudBehavioral] JourneyFeaturesResponse cloudBehavioral
+         */
+
+        /**
+         * Constructs a new JourneyFeaturesResponse.
+         * @memberof dataplane
+         * @classdesc Represents a JourneyFeaturesResponse.
+         * @implements IJourneyFeaturesResponse
+         * @constructor
+         * @param {dataplane.IJourneyFeaturesResponse=} [properties] Properties to set
+         */
+        function JourneyFeaturesResponse(properties) {
+            this.clientSdk = {};
+            this.cloudNetwork = {};
+            this.cloudBehavioral = {};
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * JourneyFeaturesResponse journeyId.
+         * @member {string} journeyId
+         * @memberof dataplane.JourneyFeaturesResponse
+         * @instance
+         */
+        JourneyFeaturesResponse.prototype.journeyId = "";
+
+        /**
+         * JourneyFeaturesResponse clientSdk.
+         * @member {Object.<string,feature.IFeature>} clientSdk
+         * @memberof dataplane.JourneyFeaturesResponse
+         * @instance
+         */
+        JourneyFeaturesResponse.prototype.clientSdk = $util.emptyObject;
+
+        /**
+         * JourneyFeaturesResponse cloudNetwork.
+         * @member {Object.<string,feature.IFeature>} cloudNetwork
+         * @memberof dataplane.JourneyFeaturesResponse
+         * @instance
+         */
+        JourneyFeaturesResponse.prototype.cloudNetwork = $util.emptyObject;
+
+        /**
+         * JourneyFeaturesResponse cloudBehavioral.
+         * @member {Object.<string,feature.IFeature>} cloudBehavioral
+         * @memberof dataplane.JourneyFeaturesResponse
+         * @instance
+         */
+        JourneyFeaturesResponse.prototype.cloudBehavioral = $util.emptyObject;
+
+        /**
+         * Creates a new JourneyFeaturesResponse instance using the specified properties.
+         * @function create
+         * @memberof dataplane.JourneyFeaturesResponse
+         * @static
+         * @param {dataplane.IJourneyFeaturesResponse=} [properties] Properties to set
+         * @returns {dataplane.JourneyFeaturesResponse} JourneyFeaturesResponse instance
+         */
+        JourneyFeaturesResponse.create = function create(properties) {
+            return new JourneyFeaturesResponse(properties);
+        };
+
+        /**
+         * Encodes the specified JourneyFeaturesResponse message. Does not implicitly {@link dataplane.JourneyFeaturesResponse.verify|verify} messages.
+         * @function encode
+         * @memberof dataplane.JourneyFeaturesResponse
+         * @static
+         * @param {dataplane.IJourneyFeaturesResponse} message JourneyFeaturesResponse message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        JourneyFeaturesResponse.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.journeyId != null && Object.hasOwnProperty.call(message, "journeyId"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.journeyId);
+            if (message.clientSdk != null && Object.hasOwnProperty.call(message, "clientSdk"))
+                for (var keys = Object.keys(message.clientSdk), i = 0; i < keys.length; ++i) {
+                    writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                    $root.feature.Feature.encode(message.clientSdk[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                }
+            if (message.cloudNetwork != null && Object.hasOwnProperty.call(message, "cloudNetwork"))
+                for (var keys = Object.keys(message.cloudNetwork), i = 0; i < keys.length; ++i) {
+                    writer.uint32(/* id 3, wireType 2 =*/26).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                    $root.feature.Feature.encode(message.cloudNetwork[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                }
+            if (message.cloudBehavioral != null && Object.hasOwnProperty.call(message, "cloudBehavioral"))
+                for (var keys = Object.keys(message.cloudBehavioral), i = 0; i < keys.length; ++i) {
+                    writer.uint32(/* id 4, wireType 2 =*/34).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                    $root.feature.Feature.encode(message.cloudBehavioral[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                }
+            return writer;
+        };
+
+        /**
+         * Decodes a JourneyFeaturesResponse message from the specified reader or buffer.
+         * @function decode
+         * @memberof dataplane.JourneyFeaturesResponse
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {dataplane.JourneyFeaturesResponse} JourneyFeaturesResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        JourneyFeaturesResponse.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.dataplane.JourneyFeaturesResponse(), key, value;
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.journeyId = reader.string();
+                    break;
+                case 2:
+                    if (message.clientSdk === $util.emptyObject)
+                        message.clientSdk = {};
+                    var end2 = reader.uint32() + reader.pos;
+                    key = "";
+                    value = null;
+                    while (reader.pos < end2) {
+                        var tag2 = reader.uint32();
+                        switch (tag2 >>> 3) {
+                        case 1:
+                            key = reader.string();
+                            break;
+                        case 2:
+                            value = $root.feature.Feature.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag2 & 7);
+                            break;
+                        }
+                    }
+                    message.clientSdk[key] = value;
+                    break;
+                case 3:
+                    if (message.cloudNetwork === $util.emptyObject)
+                        message.cloudNetwork = {};
+                    var end2 = reader.uint32() + reader.pos;
+                    key = "";
+                    value = null;
+                    while (reader.pos < end2) {
+                        var tag2 = reader.uint32();
+                        switch (tag2 >>> 3) {
+                        case 1:
+                            key = reader.string();
+                            break;
+                        case 2:
+                            value = $root.feature.Feature.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag2 & 7);
+                            break;
+                        }
+                    }
+                    message.cloudNetwork[key] = value;
+                    break;
+                case 4:
+                    if (message.cloudBehavioral === $util.emptyObject)
+                        message.cloudBehavioral = {};
+                    var end2 = reader.uint32() + reader.pos;
+                    key = "";
+                    value = null;
+                    while (reader.pos < end2) {
+                        var tag2 = reader.uint32();
+                        switch (tag2 >>> 3) {
+                        case 1:
+                            key = reader.string();
+                            break;
+                        case 2:
+                            value = $root.feature.Feature.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag2 & 7);
+                            break;
+                        }
+                    }
+                    message.cloudBehavioral[key] = value;
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return JourneyFeaturesResponse;
     })();
 
     dataplane.SignalsResponse = (function() {

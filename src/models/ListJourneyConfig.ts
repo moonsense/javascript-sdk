@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export { MoonsenseClient } from './MoonsenseClient';
-export { MoonsenseClientConfig } from './MoonsenseClientConfig';
-export * from './models/ListSessionConfig';
-export * from './models/ListJourneyConfig';
-export { bundle, feature, common } from './models/generated/protos';
+import { common } from './generated/protos';
+
+export interface ListJourneyConfig {
+    journeysPerPage?: number;
+    platforms?: common.DevicePlatform[];
+    since?: Date;
+    until?: Date;
+}

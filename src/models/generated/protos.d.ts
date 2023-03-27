@@ -178,6 +178,12 @@ export namespace bundle {
 
         /** Bundle formSubmitEvents */
         formSubmitEvents?: (bundle.IFormSubmitEvent[]|null);
+
+        /** Bundle contextMenuEvents */
+        contextMenuEvents?: (bundle.IContextMenuEvent[]|null);
+
+        /** Bundle frameRateEvent */
+        frameRateEvent?: (bundle.IFrameRateEvent|null);
     }
 
     /** Represents a Bundle. */
@@ -263,6 +269,12 @@ export namespace bundle {
 
         /** Bundle formSubmitEvents. */
         public formSubmitEvents: bundle.IFormSubmitEvent[];
+
+        /** Bundle contextMenuEvents. */
+        public contextMenuEvents: bundle.IContextMenuEvent[];
+
+        /** Bundle frameRateEvent. */
+        public frameRateEvent?: (bundle.IFrameRateEvent|null);
 
         /**
          * Creates a new Bundle instance using the specified properties.
@@ -2010,6 +2022,124 @@ export namespace bundle {
          */
         public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bundle.FormSubmitEvent;
     }
+
+    /** Properties of a ContextMenuEvent. */
+    interface IContextMenuEvent {
+
+        /** ContextMenuEvent determinedAt */
+        determinedAt?: (number|null);
+
+        /** ContextMenuEvent contextMenuStatus */
+        contextMenuStatus?: (bundle.ContextMenuEvent.ContextMenuStatus|null);
+
+        /** ContextMenuEvent target */
+        target?: (bundle.ITargetElement|null);
+    }
+
+    /** Represents a ContextMenuEvent. */
+    class ContextMenuEvent implements IContextMenuEvent {
+
+        /**
+         * Constructs a new ContextMenuEvent.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: bundle.IContextMenuEvent);
+
+        /** ContextMenuEvent determinedAt. */
+        public determinedAt: number;
+
+        /** ContextMenuEvent contextMenuStatus. */
+        public contextMenuStatus: bundle.ContextMenuEvent.ContextMenuStatus;
+
+        /** ContextMenuEvent target. */
+        public target?: (bundle.ITargetElement|null);
+
+        /**
+         * Creates a new ContextMenuEvent instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns ContextMenuEvent instance
+         */
+        public static create(properties?: bundle.IContextMenuEvent): bundle.ContextMenuEvent;
+
+        /**
+         * Encodes the specified ContextMenuEvent message. Does not implicitly {@link bundle.ContextMenuEvent.verify|verify} messages.
+         * @param message ContextMenuEvent message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: bundle.IContextMenuEvent, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a ContextMenuEvent message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns ContextMenuEvent
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bundle.ContextMenuEvent;
+    }
+
+    namespace ContextMenuEvent {
+
+        /** ContextMenuStatus enum. */
+        enum ContextMenuStatus {
+            UNKNOWN_CONTEXT_MENU_STATUS = 0,
+            OPEN = 1,
+            CLOSED = 2
+        }
+    }
+
+    /** Properties of a FrameRateEvent. */
+    interface IFrameRateEvent {
+
+        /** FrameRateEvent determinedAt */
+        determinedAt?: (number|null);
+
+        /** FrameRateEvent framesPerSecond */
+        framesPerSecond?: (number|null);
+    }
+
+    /** Represents a FrameRateEvent. */
+    class FrameRateEvent implements IFrameRateEvent {
+
+        /**
+         * Constructs a new FrameRateEvent.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: bundle.IFrameRateEvent);
+
+        /** FrameRateEvent determinedAt. */
+        public determinedAt: number;
+
+        /** FrameRateEvent framesPerSecond. */
+        public framesPerSecond: number;
+
+        /**
+         * Creates a new FrameRateEvent instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns FrameRateEvent instance
+         */
+        public static create(properties?: bundle.IFrameRateEvent): bundle.FrameRateEvent;
+
+        /**
+         * Encodes the specified FrameRateEvent message. Does not implicitly {@link bundle.FrameRateEvent.verify|verify} messages.
+         * @param message FrameRateEvent message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: bundle.IFrameRateEvent, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a FrameRateEvent message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns FrameRateEvent
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bundle.FrameRateEvent;
+    }
 }
 
 /** Namespace common. */
@@ -2212,7 +2342,9 @@ export namespace common {
         MOUSE_WHEEL = 19,
         CLICK = 20,
         INPUT_CHANGE = 21,
-        FORM_SUBMIT = 22
+        FORM_SUBMIT = 22,
+        CONTEXT_MENU = 23,
+        FRAME_RATE = 24
     }
 }
 
@@ -4206,6 +4338,93 @@ export namespace dataplane {
         public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.WebhookPayload;
     }
 
+    /** Properties of a Journey. */
+    interface IJourney {
+
+        /** Journey journeyId */
+        journeyId?: (string|null);
+
+        /** Journey appId */
+        appId?: (string|null);
+
+        /** Journey oldestEvent */
+        oldestEvent?: (google.protobuf.ITimestamp|null);
+
+        /** Journey newestEvent */
+        newestEvent?: (google.protobuf.ITimestamp|null);
+
+        /** Journey createdAt */
+        createdAt?: (google.protobuf.ITimestamp|null);
+
+        /** Journey sessionCount */
+        sessionCount?: (number|null);
+
+        /** Journey primaryPlatform */
+        primaryPlatform?: (common.DevicePlatform|null);
+
+        /** Journey primaryRegionId */
+        primaryRegionId?: (string|null);
+    }
+
+    /** Represents a Journey. */
+    class Journey implements IJourney {
+
+        /**
+         * Constructs a new Journey.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: dataplane.IJourney);
+
+        /** Journey journeyId. */
+        public journeyId: string;
+
+        /** Journey appId. */
+        public appId: string;
+
+        /** Journey oldestEvent. */
+        public oldestEvent?: (google.protobuf.ITimestamp|null);
+
+        /** Journey newestEvent. */
+        public newestEvent?: (google.protobuf.ITimestamp|null);
+
+        /** Journey createdAt. */
+        public createdAt?: (google.protobuf.ITimestamp|null);
+
+        /** Journey sessionCount. */
+        public sessionCount: number;
+
+        /** Journey primaryPlatform. */
+        public primaryPlatform: common.DevicePlatform;
+
+        /** Journey primaryRegionId. */
+        public primaryRegionId: string;
+
+        /**
+         * Creates a new Journey instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Journey instance
+         */
+        public static create(properties?: dataplane.IJourney): dataplane.Journey;
+
+        /**
+         * Encodes the specified Journey message. Does not implicitly {@link dataplane.Journey.verify|verify} messages.
+         * @param message Journey message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: dataplane.IJourney, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Journey message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Journey
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.Journey;
+    }
+
     /** Properties of a SessionListResponse. */
     interface ISessionListResponse {
 
@@ -4300,6 +4519,108 @@ export namespace dataplane {
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.SessionDeleteResponse;
+    }
+
+    /** Properties of a JourneyListResponse. */
+    interface IJourneyListResponse {
+
+        /** JourneyListResponse journeys */
+        journeys?: (dataplane.IJourney[]|null);
+
+        /** JourneyListResponse pagination */
+        pagination?: (pagination.IPaginationResponse|null);
+    }
+
+    /** Represents a JourneyListResponse. */
+    class JourneyListResponse implements IJourneyListResponse {
+
+        /**
+         * Constructs a new JourneyListResponse.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: dataplane.IJourneyListResponse);
+
+        /** JourneyListResponse journeys. */
+        public journeys: dataplane.IJourney[];
+
+        /** JourneyListResponse pagination. */
+        public pagination?: (pagination.IPaginationResponse|null);
+
+        /**
+         * Creates a new JourneyListResponse instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns JourneyListResponse instance
+         */
+        public static create(properties?: dataplane.IJourneyListResponse): dataplane.JourneyListResponse;
+
+        /**
+         * Encodes the specified JourneyListResponse message. Does not implicitly {@link dataplane.JourneyListResponse.verify|verify} messages.
+         * @param message JourneyListResponse message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: dataplane.IJourneyListResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a JourneyListResponse message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns JourneyListResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.JourneyListResponse;
+    }
+
+    /** Properties of a JourneyDetailResponse. */
+    interface IJourneyDetailResponse {
+
+        /** JourneyDetailResponse journey */
+        journey?: (dataplane.IJourney|null);
+
+        /** JourneyDetailResponse sessions */
+        sessions?: (dataplane.ISession[]|null);
+    }
+
+    /** Represents a JourneyDetailResponse. */
+    class JourneyDetailResponse implements IJourneyDetailResponse {
+
+        /**
+         * Constructs a new JourneyDetailResponse.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: dataplane.IJourneyDetailResponse);
+
+        /** JourneyDetailResponse journey. */
+        public journey?: (dataplane.IJourney|null);
+
+        /** JourneyDetailResponse sessions. */
+        public sessions: dataplane.ISession[];
+
+        /**
+         * Creates a new JourneyDetailResponse instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns JourneyDetailResponse instance
+         */
+        public static create(properties?: dataplane.IJourneyDetailResponse): dataplane.JourneyDetailResponse;
+
+        /**
+         * Encodes the specified JourneyDetailResponse message. Does not implicitly {@link dataplane.JourneyDetailResponse.verify|verify} messages.
+         * @param message JourneyDetailResponse message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: dataplane.IJourneyDetailResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a JourneyDetailResponse message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns JourneyDetailResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.JourneyDetailResponse;
     }
 
     /** Properties of a ChunksListResponse. */
@@ -4753,6 +5074,132 @@ export namespace dataplane {
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.FeatureListResponse;
+    }
+
+    /** Properties of a SessionFeaturesResponse. */
+    interface ISessionFeaturesResponse {
+
+        /** SessionFeaturesResponse sessionId */
+        sessionId?: (string|null);
+
+        /** SessionFeaturesResponse clientSdk */
+        clientSdk?: ({ [k: string]: feature.IFeature }|null);
+
+        /** SessionFeaturesResponse cloudNetwork */
+        cloudNetwork?: ({ [k: string]: feature.IFeature }|null);
+
+        /** SessionFeaturesResponse cloudBehavioral */
+        cloudBehavioral?: ({ [k: string]: feature.IFeature }|null);
+    }
+
+    /** Represents a SessionFeaturesResponse. */
+    class SessionFeaturesResponse implements ISessionFeaturesResponse {
+
+        /**
+         * Constructs a new SessionFeaturesResponse.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: dataplane.ISessionFeaturesResponse);
+
+        /** SessionFeaturesResponse sessionId. */
+        public sessionId: string;
+
+        /** SessionFeaturesResponse clientSdk. */
+        public clientSdk: { [k: string]: feature.IFeature };
+
+        /** SessionFeaturesResponse cloudNetwork. */
+        public cloudNetwork: { [k: string]: feature.IFeature };
+
+        /** SessionFeaturesResponse cloudBehavioral. */
+        public cloudBehavioral: { [k: string]: feature.IFeature };
+
+        /**
+         * Creates a new SessionFeaturesResponse instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SessionFeaturesResponse instance
+         */
+        public static create(properties?: dataplane.ISessionFeaturesResponse): dataplane.SessionFeaturesResponse;
+
+        /**
+         * Encodes the specified SessionFeaturesResponse message. Does not implicitly {@link dataplane.SessionFeaturesResponse.verify|verify} messages.
+         * @param message SessionFeaturesResponse message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: dataplane.ISessionFeaturesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SessionFeaturesResponse message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SessionFeaturesResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.SessionFeaturesResponse;
+    }
+
+    /** Properties of a JourneyFeaturesResponse. */
+    interface IJourneyFeaturesResponse {
+
+        /** JourneyFeaturesResponse journeyId */
+        journeyId?: (string|null);
+
+        /** JourneyFeaturesResponse clientSdk */
+        clientSdk?: ({ [k: string]: feature.IFeature }|null);
+
+        /** JourneyFeaturesResponse cloudNetwork */
+        cloudNetwork?: ({ [k: string]: feature.IFeature }|null);
+
+        /** JourneyFeaturesResponse cloudBehavioral */
+        cloudBehavioral?: ({ [k: string]: feature.IFeature }|null);
+    }
+
+    /** Represents a JourneyFeaturesResponse. */
+    class JourneyFeaturesResponse implements IJourneyFeaturesResponse {
+
+        /**
+         * Constructs a new JourneyFeaturesResponse.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: dataplane.IJourneyFeaturesResponse);
+
+        /** JourneyFeaturesResponse journeyId. */
+        public journeyId: string;
+
+        /** JourneyFeaturesResponse clientSdk. */
+        public clientSdk: { [k: string]: feature.IFeature };
+
+        /** JourneyFeaturesResponse cloudNetwork. */
+        public cloudNetwork: { [k: string]: feature.IFeature };
+
+        /** JourneyFeaturesResponse cloudBehavioral. */
+        public cloudBehavioral: { [k: string]: feature.IFeature };
+
+        /**
+         * Creates a new JourneyFeaturesResponse instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns JourneyFeaturesResponse instance
+         */
+        public static create(properties?: dataplane.IJourneyFeaturesResponse): dataplane.JourneyFeaturesResponse;
+
+        /**
+         * Encodes the specified JourneyFeaturesResponse message. Does not implicitly {@link dataplane.JourneyFeaturesResponse.verify|verify} messages.
+         * @param message JourneyFeaturesResponse message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: dataplane.IJourneyFeaturesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a JourneyFeaturesResponse message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns JourneyFeaturesResponse
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.JourneyFeaturesResponse;
     }
 
     /** Properties of a SignalsResponse. */

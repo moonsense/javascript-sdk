@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && cp -R ./src/models/generated ./dist/models/generated",
+    "build": "tsc && cp -R ./src/models/generated ./dist/models",
     "test": "jest --coverage --ci --detectOpenHandles"
   },
   "repository": {

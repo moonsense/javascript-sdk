@@ -19,6 +19,8 @@ import { ListSessionConfig } from './models/ListSessionConfig';
 import { PaginatedSessionList } from './models/PaginatedSessionList';
 import { ControlPlaneClient } from './services/ControlPlaneClient';
 import { DataPlaneClient } from './services/DataPlaneClient';
+import { ListJourneyConfig } from './models/ListJourneyConfig';
+import { PaginatedJourneyList } from './models/PaginatedJourneyList';
 
 /**
  * A client for the MoonSense API. This client can be created
@@ -130,6 +132,24 @@ export class MoonsenseClient {
     }
 
     /**
+     * ListJourneys lists the journeys for the app associated with 
+     * the provided secret token.
+     * 
+     * @param config The configuration to use when listing journeys
+     */
+    public listJourneys(config?: ListJourneyConfig): Promise<PaginatedJourneyList> {
+        const dataPlaneClient = this.getDataRegionClient(this.config.defaultRegion!);
+        return dataPlaneClient
+            .listJourneys(config || {})
+            .then(resp => new PaginatedJourneyList(
+                dataPlaneClient,
+                config || {},
+                resp,
+                )
+            );
+    }
+
+    /**
      * ListSessions lists the sessions for the app associated with 
      * the provided secret token.
      * 
@@ -164,7 +184,7 @@ export class MoonsenseClient {
      * @param region The region to fetch the session from. If not provided, a describe call will be made
      * to determine the correct region. 
      */
-    public async listSessionFeatures(sessionId: string, region?: string): Promise<dataplane.IFeatureListResponse> {
+    public async listSessionFeatures(sessionId: string, region?: string): Promise<dataplane.ISessionFeaturesResponse> {
         const dataPlaneClient = await this.findDataRegion(sessionId, region);
         return dataPlaneClient.listSessionFeatures(sessionId);
     }
