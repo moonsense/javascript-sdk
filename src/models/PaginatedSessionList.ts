@@ -14,16 +14,16 @@
 
 import { DataPlaneClient } from '../services/DataPlaneClient';
 import { dataplane } from './generated/protos';
-import { ListJourneyConfig } from './ListJourneyConfig';
+import { ListSessionConfig } from './ListSessionConfig';
 
 export class PaginatedSessionList {
     private client: DataPlaneClient;
-    private currentPageConfig: ListJourneyConfig;
+    private currentPageConfig: ListSessionConfig;
     private sessionList: dataplane.SessionListResponse;    
 
     constructor(
         client: DataPlaneClient, 
-        config: ListJourneyConfig,
+        config: ListSessionConfig,
         sessionList: dataplane.SessionListResponse,
     ) {
         this.client = client;
@@ -35,7 +35,7 @@ export class PaginatedSessionList {
         return this.sessionList.sessions;
     }
 
-    public get hasMoreSessions(): boolean {
+    public get hasMore(): boolean {
         if (!this.sessionList || !this.sessionList.pagination) {
             return false;
         }
@@ -44,14 +44,14 @@ export class PaginatedSessionList {
     }
 
     public async nextPage(): Promise<PaginatedSessionList> {
-        if (!this.hasMoreSessions) {
-            throw new Error('No more journeys to fetch');
+        if (!this.hasMore) {
+            throw new Error('No more sessions to fetch');
         }
 
         const lastSession = this.sessionList.sessions[this.sessionList.sessions.length - 1];
 
         if (!lastSession || !lastSession.createdAt) {
-            throw new Error('Could not determine the last journey creation date');
+            throw new Error('Could not determine the last session creation date');
         }
 
         // Update the config to fetch the next page

@@ -35,7 +35,7 @@ export class PaginatedJourneyList {
         return this.journeyList.journeys;
     }
 
-    public get hasMoreJourneys(): boolean {
+    public get hasMore(): boolean {
         if (!this.journeyList || !this.journeyList.pagination) {
             return false;
         }
@@ -44,7 +44,7 @@ export class PaginatedJourneyList {
     }
 
     public async nextPage(): Promise<PaginatedJourneyList> {
-        if (!this.hasMoreJourneys) {
+        if (!this.hasMore) {
             throw new Error('No more journeys to fetch');
         }
 
