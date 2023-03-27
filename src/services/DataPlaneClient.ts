@@ -85,6 +85,13 @@ export class DataPlaneClient extends ApiClient {
         );
     }
 
+    public describeJourney(journeyId: string): Promise<dataplane.JourneyDetailResponse> {
+        return this.get(this.version + `/journeys/${journeyId}`)
+            .then(resp => this.processResponse(resp))
+            .then(data => dataplane.JourneyDetailResponse.decode(new Uint8Array(data))
+        );
+    }
+
     public listSessions(config: ListSessionConfig): Promise<dataplane.SessionListResponse> {
         const params = new URLSearchParams();
         

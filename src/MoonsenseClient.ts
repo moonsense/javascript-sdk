@@ -150,6 +150,16 @@ export class MoonsenseClient {
     }
 
     /**
+     * Fetches the details of a journey with the specified journeyId.
+     * The journey response includes the list of sessions associated with the journey.
+     * 
+     * @param sessionId The ID of the journey to fetch
+     */
+    public describeJourney(journeyId: string): Promise<dataplane.IJourneyDetailResponse> {
+        return this.getDataRegionClient(this.config.defaultRegion!).describeJourney(journeyId);
+    }
+
+    /**
      * ListSessions lists the sessions for the app associated with 
      * the provided secret token.
      * 
