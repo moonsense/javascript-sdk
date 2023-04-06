@@ -35,7 +35,7 @@ let paginated = await client.listSessions();
 do {
     console.log(`Page ${page}`, paginated.sessions);
 
-    if (paginated.hasMoreSessions) {
+    if (paginated.hasMore) {
         page++;
         paginated = await paginated.nextPage();
     } else {

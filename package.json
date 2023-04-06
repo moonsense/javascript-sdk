@@ -1,11 +1,11 @@
 {
   "name": "@moonsense/javascript-sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Javascript/Typescript client for accessing the Moonsense APIs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && cp -R ./src/models/generated ./dist/models/generated",
+    "build": "tsc && cp -R ./src/models/generated ./dist/models",
     "test": "jest --coverage --ci --detectOpenHandles"
   },
   "repository": {

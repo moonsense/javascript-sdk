@@ -140,6 +140,165 @@ describe('Client', () => {
             expect(request?.method).toEqual('GET');
         });
 
+        describe('list journeys', () => {
+            it('should list journeys with no config', async () => {
+                const response = dataplane.JourneyListResponse.encode({
+                    journeys: [
+                        {
+                            journeyId: 'journey1',
+                            sessionCount: 1,
+                        },
+                        {
+                            journeyId: 'journey2',
+                            sessionCount: 2,
+                        }
+                    ],
+                }).finish();
+                mockRequest(response);
+
+                const client = new MoonsenseClient({secretToken: 'test'});
+                const result = await client.listJourneys();
+                
+                expect(result.hasMore).toBe(false);
+                expect(result.journeys.length).toBe(2);
+                expect(result.journeys[0].journeyId).toBe('journey1');
+
+                // Shouldn't have a next page
+                await expect(result.nextPage()).rejects.toThrow('No more journeys to fetch');
+
+                expect(mockFetch).toHaveBeenCalledTimes(1);
+                const calls = mockFetch.mock.calls;
+                const url = calls[0][0];
+                const request = calls[0][1];
+                expect(url).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys?');
+                expect(request?.method).toEqual('GET');
+            });
+
+            it('should list journeys with search params', async () => {
+                const response = dataplane.JourneyListResponse.encode({
+                    journeys: [
+                        {
+                            journeyId: 'journey1',
+                            sessionCount: 1,
+                        },
+                        {
+                            journeyId: 'journey2',
+                            sessionCount: 2,
+                        }
+                    ],
+                }).finish();
+                mockRequest(response);
+
+                const client = new MoonsenseClient({secretToken: 'test'});
+                const result = await client.listJourneys({
+                    journeysPerPage: 2,
+                    platforms: [common.DevicePlatform.ANDROID, common.DevicePlatform.WEB],
+                    since: new Date('2021-01-01'),
+                    until: new Date('2021-01-02'),
+                });
+                
+                expect(result.hasMore).toBe(false);
+                expect(result.journeys.length).toBe(2);
+                expect(result.journeys[0].journeyId).toBe('journey1');
+
+                expect(mockFetch).toHaveBeenCalledTimes(1);
+                const calls = mockFetch.mock.calls;
+                const url = calls[0][0];
+                const request = calls[0][1];
+                const splitUrl = url.toString().split('?');
+                expect(splitUrl[0]).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys');
+                expect(request?.method).toEqual('GET');
+
+                const params = new URLSearchParams(splitUrl[1]);
+                expect(params.get('per_page')).toEqual('2');
+                expect(params.getAll('filter[platforms][]')[0]).toEqual('ANDROID');
+                expect(params.getAll('filter[platforms][]')[1]).toEqual('WEB');
+                expect(params.get('filter[min_created_at]')).toEqual('2021-01-01T00:00:00.000Z');
+                expect(params.get('filter[max_created_at]')).toEqual('2021-01-02T00:00:00.000Z');
+            });
+
+            it('should handle pagination', async () => {
+                const response1 = dataplane.JourneyListResponse.encode({
+                    journeys: [
+                        {
+                            journeyId: 'journey1',
+                            sessionCount: 1,
+                        },
+                        {
+                            journeyId: 'journey2',
+                            sessionCount: 2,
+                            createdAt: new google.protobuf.Timestamp({
+                                seconds: new Date('2021-01-01').getTime() / 1000,
+                            }),
+                        }
+                    ],
+                    pagination: {
+                        nextPage: 1,
+                    }
+                }).finish();
+                mockRequest(response1);
+
+                const client = new MoonsenseClient({secretToken: 'test'});
+                const result = await client.listJourneys();
+                
+                expect(result.hasMore).toBe(true);
+                expect(result.journeys.length).toBe(2);
+                expect(result.journeys[0].journeyId).toBe('journey1');
+
+                expect(mockFetch).toHaveBeenCalledTimes(1);
+                const calls = mockFetch.mock.calls;
+                const url = calls[0][0];
+                const request = calls[0][1];
+                expect(url).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys?');
+                expect(request?.method).toEqual('GET');
+
+                // Clear the mock and request the second page
+                mockFetch.mockClear();
+
+                const response2 = dataplane.JourneyListResponse.encode({
+                    journeys: [
+                        {
+                            journeyId: 'journey3',
+                            sessionCount: 1,
+                        },
+                    ],
+                }).finish();
+                mockRequest(response2);
+
+                const result2 = await result.nextPage();
+                expect(result2.journeys.length).toBe(1);
+                expect(result2.journeys[0].journeyId).toBe('journey3');
+
+                const calls2 = mockFetch.mock.calls;
+                const url2 = calls2[0][0];
+                const request2 = calls2[0][1];
+                expect(url2).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys?filter%5Bmax_created_at%5D=2021-01-01T00%3A00%3A00.000Z');
+                expect(request2?.method).toEqual('GET');
+
+            });
+        });
+
+        it('should describe journey', async () => {
+            const response = dataplane.JourneyDetailResponse.encode({
+                journey: {
+                    journeyId: 'abc',
+                },
+            }).finish();
+            mockRequest(response);
+
+            const client = new MoonsenseClient({secretToken: 'test'});
+            const result = await client.describeJourney('abc');
+
+            expect(result.journey?.journeyId).toBe('abc');
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
+            const calls = mockFetch.mock.calls;
+            const url = calls[0][0];
+            const request = calls[0][1];
+            expect(url).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys/abc');
+            expect(request?.method).toEqual('GET');
+        });
+
         describe('list sessions', () => {
             it('should list sessions with no config', async () => {
                 const response = dataplane.SessionListResponse.encode({
@@ -159,7 +318,7 @@ describe('Client', () => {
                 const client = new MoonsenseClient({secretToken: 'test'});
                 const result = await client.listSessions();
                 
-                expect(result.hasMoreSessions).toBe(false);
+                expect(result.hasMore).toBe(false);
                 expect(result.sessions.length).toBe(2);
                 expect(result.sessions[0].sessionId).toBe('abc');
 
@@ -199,7 +358,7 @@ describe('Client', () => {
                     until: new Date('2021-01-02'),
                 });
                 
-                expect(result.hasMoreSessions).toBe(false);
+                expect(result.hasMore).toBe(false);
                 expect(result.sessions.length).toBe(2);
                 expect(result.sessions[0].sessionId).toBe('abc');
 
@@ -242,7 +401,7 @@ describe('Client', () => {
                     sessionsPerPage: -1,
                 });
                 
-                expect(result.hasMoreSessions).toBe(false);
+                expect(result.hasMore).toBe(false);
                 expect(result.sessions.length).toBe(2);
                 expect(result.sessions[0].sessionId).toBe('abc');
 
@@ -279,7 +438,7 @@ describe('Client', () => {
                     sessionsPerPage: 10000,
                 });
                 
-                expect(result.hasMoreSessions).toBe(false);
+                expect(result.hasMore).toBe(false);
                 expect(result.sessions.length).toBe(2);
                 expect(result.sessions[0].sessionId).toBe('abc');
 
@@ -320,7 +479,7 @@ describe('Client', () => {
                 const client = new MoonsenseClient({secretToken: 'test'});
                 const result = await client.listSessions();
                 
-                expect(result.hasMoreSessions).toBe(true);
+                expect(result.hasMore).toBe(true);
                 expect(result.sessions.length).toBe(2);
                 expect(result.sessions[0].sessionId).toBe('abc');
 
@@ -424,15 +583,13 @@ describe('Client', () => {
         });
 
         it('should list session features', async () => {
-            const response = dataplane.FeatureListResponse.encode({
+            const response = dataplane.SessionFeaturesResponse.encode({
                 sessionId: 'abc',
-                features: {
-                    'feature1': {
-                        features: [
-                            {
-                                key: 'feature1',
-                            }
-                        ]
+                cloudNetwork: {
+                    'network_telemetry-connection_type': {
+                        stringList: {
+                            value: ['wifi']
+                        }
                     }
                 }
             }).finish();
@@ -447,6 +604,7 @@ describe('Client', () => {
             const result = await client.listSessionFeatures('abc');
 
             expect(result.sessionId).toBe('abc');
+            expect(result.cloudNetwork?.['network_telemetry-connection_type']?.stringList?.value?.[0]).toEqual('wifi')
 
             expect(mockFetch).toHaveBeenCalledTimes(1);
             const calls = mockFetch.mock.calls;

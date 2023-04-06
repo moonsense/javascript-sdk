@@ -14,57 +14,57 @@
 
 import { DataPlaneClient } from '../services/DataPlaneClient';
 import { dataplane } from './generated/protos';
-import { ListSessionConfig } from './ListSessionConfig';
+import { ListJourneyConfig } from './ListJourneyConfig';
 
-export class PaginatedSessionList {
+export class PaginatedJourneyList {
     private client: DataPlaneClient;
-    private currentPageConfig: ListSessionConfig;
-    private sessionList: dataplane.SessionListResponse;    
+    private currentPageConfig: ListJourneyConfig;
+    private journeyList: dataplane.JourneyListResponse;    
 
     constructor(
         client: DataPlaneClient, 
-        config: ListSessionConfig,
-        sessionList: dataplane.SessionListResponse,
+        config: ListJourneyConfig,
+        journeyList: dataplane.JourneyListResponse,
     ) {
         this.client = client;
         this.currentPageConfig = JSON.parse(JSON.stringify(config)); // clone the config
-        this.sessionList = sessionList;
+        this.journeyList = journeyList;
     }
 
-    public get sessions(): dataplane.ISession[] {
-        return this.sessionList.sessions;
+    public get journeys(): dataplane.IJourney[] {
+        return this.journeyList.journeys;
     }
 
     public get hasMore(): boolean {
-        if (!this.sessionList || !this.sessionList.pagination) {
+        if (!this.journeyList || !this.journeyList.pagination) {
             return false;
         }
 
-        return this.sessionList.pagination.nextPage !== 0;
+        return this.journeyList.pagination.nextPage !== 0;
     }
 
-    public async nextPage(): Promise<PaginatedSessionList> {
+    public async nextPage(): Promise<PaginatedJourneyList> {
         if (!this.hasMore) {
-            throw new Error('No more sessions to fetch');
+            throw new Error('No more journeys to fetch');
         }
 
-        const lastSession = this.sessionList.sessions[this.sessionList.sessions.length - 1];
+        const lastJourney = this.journeyList.journeys[this.journeyList.journeys.length - 1];
 
-        if (!lastSession || !lastSession.createdAt) {
-            throw new Error('Could not determine the last session creation date');
+        if (!lastJourney || !lastJourney.createdAt) {
+            throw new Error('Could not determine the last journey creation date');
         }
 
         // Update the config to fetch the next page
         const nextPage = this.currentPageConfig;
         nextPage.until = new Date(
-            (lastSession.createdAt.seconds || 0 )  * 1000 +
-            (lastSession.createdAt.nanos || 0 ) / 1e6
+            (lastJourney.createdAt.seconds || 0 )  * 1000 +
+            (lastJourney.createdAt.nanos || 0 ) / 1e6
         );
 
         // Fetch the next page
-        const sessionList = await this.client.listSessions(nextPage);
+        const journeyList = await this.client.listJourneys(nextPage);
 
-        return new PaginatedSessionList(this.client, nextPage, sessionList);
+        return new PaginatedJourneyList(this.client, nextPage, journeyList);
     }
    
 }

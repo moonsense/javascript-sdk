@@ -16,10 +16,16 @@ import { decompressSync } from 'fflate';
 import { MoonsenseClientConfig } from '../MoonsenseClientConfig';
 import { bundle, common, dataplane } from '../models/generated/protos';
 import { ListSessionConfig } from '../models/ListSessionConfig';
+import { ListJourneyConfig } from '../models/ListJourneyConfig';
 import { ApiClient } from './ApiClient';
 import { Readable} from 'stream';
 
 import tar from 'tar-stream';
+
+/**
+ * The maximum number of journeys that can be returned per page.
+ */
+export const MAX_JOURNEYS_PER_PAGE = 100;
 
 /**
  * The maximum number of sessions that can be returned per page.
@@ -46,6 +52,43 @@ export class DataPlaneClient extends ApiClient {
                 const body = new Uint8Array(data);
                 return common.TokenSelfResponse.decode(body);
             }
+        );
+    }
+    
+    public listJourneys(config: ListJourneyConfig): Promise<dataplane.JourneyListResponse> {
+        const params = new URLSearchParams();
+
+        // Append sessions per page if specified
+        let perPage = config.journeysPerPage;
+        if (perPage && perPage > 0) {
+            if (perPage > MAX_JOURNEYS_PER_PAGE) {
+                perPage = MAX_JOURNEYS_PER_PAGE;
+            }
+            params.append('per_page', perPage.toString());
+        }
+
+        if (config.platforms && config.platforms.length > 0) {
+            config.platforms.forEach(platform => params.append('filter[platforms][]', common.DevicePlatform[platform].toString()));
+        }
+
+        if (config.since) {
+            params.append('filter[min_created_at]', config.since.toISOString());
+        }
+
+        if (config.until) {
+            params.append('filter[max_created_at]', config.until.toISOString());
+        }
+
+        return this.get(this.version + '/journeys?' + params.toString())
+            .then(resp => this.processResponse(resp))
+            .then(data => dataplane.JourneyListResponse.decode(new Uint8Array(data))
+        );
+    }
+
+    public describeJourney(journeyId: string): Promise<dataplane.JourneyDetailResponse> {
+        return this.get(this.version + `/journeys/${journeyId}`)
+            .then(resp => this.processResponse(resp))
+            .then(data => dataplane.JourneyDetailResponse.decode(new Uint8Array(data))
         );
     }
 
@@ -86,7 +129,6 @@ export class DataPlaneClient extends ApiClient {
             .then(data => dataplane.SessionListResponse.decode(new Uint8Array(data))
         );
     }
-    
 
     public describeSession(sessionId: string, minimal = false): Promise<dataplane.Session> {
         let view = 'full';
@@ -100,10 +142,10 @@ export class DataPlaneClient extends ApiClient {
         );
     }
 
-    public listSessionFeatures(sessionId: string): Promise<dataplane.FeatureListResponse> {
+    public listSessionFeatures(sessionId: string): Promise<dataplane.SessionFeaturesResponse> {
         return this.get(this.version + `/sessions/${sessionId}/features`)
             .then(resp => this.processResponse(resp))
-            .then(data => dataplane.FeatureListResponse.decode(new Uint8Array(data))
+            .then(data => dataplane.SessionFeaturesResponse.decode(new Uint8Array(data))
         );
     }
 
