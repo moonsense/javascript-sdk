@@ -3308,6 +3308,9 @@ export namespace dataplane {
 
         /** SessionConfig requestedSensors */
         requestedSensors?: (common.SensorType[]|null);
+
+        /** SessionConfig networkTelemetryConfig */
+        networkTelemetryConfig?: (dataplane.INetworkTelemetryConfig|null);
     }
 
     /** Represents a SessionConfig. */
@@ -3334,6 +3337,9 @@ export namespace dataplane {
         /** SessionConfig requestedSensors. */
         public requestedSensors: common.SensorType[];
 
+        /** SessionConfig networkTelemetryConfig. */
+        public networkTelemetryConfig?: (dataplane.INetworkTelemetryConfig|null);
+
         /**
          * Creates a new SessionConfig instance using the specified properties.
          * @param [properties] Properties to set
@@ -3358,6 +3364,57 @@ export namespace dataplane {
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.SessionConfig;
+    }
+
+    /** Properties of a NetworkTelemetryConfig. */
+    interface INetworkTelemetryConfig {
+
+        /** NetworkTelemetryConfig ipv4CaptureAttempts */
+        ipv4CaptureAttempts?: (number|null);
+
+        /** NetworkTelemetryConfig ipv6CaptureAttempts */
+        ipv6CaptureAttempts?: (number|null);
+    }
+
+    /** Represents a NetworkTelemetryConfig. */
+    class NetworkTelemetryConfig implements INetworkTelemetryConfig {
+
+        /**
+         * Constructs a new NetworkTelemetryConfig.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: dataplane.INetworkTelemetryConfig);
+
+        /** NetworkTelemetryConfig ipv4CaptureAttempts. */
+        public ipv4CaptureAttempts: number;
+
+        /** NetworkTelemetryConfig ipv6CaptureAttempts. */
+        public ipv6CaptureAttempts: number;
+
+        /**
+         * Creates a new NetworkTelemetryConfig instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns NetworkTelemetryConfig instance
+         */
+        public static create(properties?: dataplane.INetworkTelemetryConfig): dataplane.NetworkTelemetryConfig;
+
+        /**
+         * Encodes the specified NetworkTelemetryConfig message. Does not implicitly {@link dataplane.NetworkTelemetryConfig.verify|verify} messages.
+         * @param message NetworkTelemetryConfig message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: dataplane.INetworkTelemetryConfig, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a NetworkTelemetryConfig message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns NetworkTelemetryConfig
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dataplane.NetworkTelemetryConfig;
     }
 
     /** Properties of a SessionLabel. */
@@ -5729,5 +5786,192 @@ export namespace v2 {
              */
             public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): v2.signal.Os;
         }
+    }
+}
+
+/** Namespace journey_feedback. */
+export namespace journey_feedback {
+
+    /** Properties of a FraudFeedback. */
+    interface IFraudFeedback {
+
+        /** FraudFeedback feedbackId */
+        feedbackId?: (string|null);
+
+        /** FraudFeedback isFraud */
+        isFraud?: (boolean|null);
+
+        /** FraudFeedback reportedAt */
+        reportedAt?: (google.protobuf.ITimestamp|null);
+
+        /** FraudFeedback fraudReason */
+        fraudReason?: (string|null);
+    }
+
+    /** Represents a FraudFeedback. */
+    class FraudFeedback implements IFraudFeedback {
+
+        /**
+         * Constructs a new FraudFeedback.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: journey_feedback.IFraudFeedback);
+
+        /** FraudFeedback feedbackId. */
+        public feedbackId: string;
+
+        /** FraudFeedback isFraud. */
+        public isFraud: boolean;
+
+        /** FraudFeedback reportedAt. */
+        public reportedAt?: (google.protobuf.ITimestamp|null);
+
+        /** FraudFeedback fraudReason. */
+        public fraudReason: string;
+
+        /**
+         * Creates a new FraudFeedback instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns FraudFeedback instance
+         */
+        public static create(properties?: journey_feedback.IFraudFeedback): journey_feedback.FraudFeedback;
+
+        /**
+         * Encodes the specified FraudFeedback message. Does not implicitly {@link journey_feedback.FraudFeedback.verify|verify} messages.
+         * @param message FraudFeedback message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: journey_feedback.IFraudFeedback, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a FraudFeedback message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns FraudFeedback
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): journey_feedback.FraudFeedback;
+    }
+
+    /** Properties of a ChargebackFeedback. */
+    interface IChargebackFeedback {
+
+        /** ChargebackFeedback feedbackId */
+        feedbackId?: (string|null);
+
+        /** ChargebackFeedback isChargeback */
+        isChargeback?: (boolean|null);
+
+        /** ChargebackFeedback reportedAt */
+        reportedAt?: (google.protobuf.ITimestamp|null);
+
+        /** ChargebackFeedback chargebackReason */
+        chargebackReason?: (string|null);
+    }
+
+    /** Represents a ChargebackFeedback. */
+    class ChargebackFeedback implements IChargebackFeedback {
+
+        /**
+         * Constructs a new ChargebackFeedback.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: journey_feedback.IChargebackFeedback);
+
+        /** ChargebackFeedback feedbackId. */
+        public feedbackId: string;
+
+        /** ChargebackFeedback isChargeback. */
+        public isChargeback: boolean;
+
+        /** ChargebackFeedback reportedAt. */
+        public reportedAt?: (google.protobuf.ITimestamp|null);
+
+        /** ChargebackFeedback chargebackReason. */
+        public chargebackReason: string;
+
+        /**
+         * Creates a new ChargebackFeedback instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns ChargebackFeedback instance
+         */
+        public static create(properties?: journey_feedback.IChargebackFeedback): journey_feedback.ChargebackFeedback;
+
+        /**
+         * Encodes the specified ChargebackFeedback message. Does not implicitly {@link journey_feedback.ChargebackFeedback.verify|verify} messages.
+         * @param message ChargebackFeedback message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: journey_feedback.IChargebackFeedback, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a ChargebackFeedback message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns ChargebackFeedback
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): journey_feedback.ChargebackFeedback;
+    }
+
+    /** Properties of a JourneyFeedback. */
+    interface IJourneyFeedback {
+
+        /** JourneyFeedback journeyId */
+        journeyId?: (string|null);
+
+        /** JourneyFeedback fraudFeedback */
+        fraudFeedback?: (journey_feedback.IFraudFeedback|null);
+
+        /** JourneyFeedback chargebackFeedback */
+        chargebackFeedback?: (journey_feedback.IChargebackFeedback|null);
+    }
+
+    /** Represents a JourneyFeedback. */
+    class JourneyFeedback implements IJourneyFeedback {
+
+        /**
+         * Constructs a new JourneyFeedback.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: journey_feedback.IJourneyFeedback);
+
+        /** JourneyFeedback journeyId. */
+        public journeyId: string;
+
+        /** JourneyFeedback fraudFeedback. */
+        public fraudFeedback?: (journey_feedback.IFraudFeedback|null);
+
+        /** JourneyFeedback chargebackFeedback. */
+        public chargebackFeedback?: (journey_feedback.IChargebackFeedback|null);
+
+        /**
+         * Creates a new JourneyFeedback instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns JourneyFeedback instance
+         */
+        public static create(properties?: journey_feedback.IJourneyFeedback): journey_feedback.JourneyFeedback;
+
+        /**
+         * Encodes the specified JourneyFeedback message. Does not implicitly {@link journey_feedback.JourneyFeedback.verify|verify} messages.
+         * @param message JourneyFeedback message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: journey_feedback.IJourneyFeedback, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a JourneyFeedback message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns JourneyFeedback
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): journey_feedback.JourneyFeedback;
     }
 }

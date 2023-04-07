@@ -14,7 +14,7 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { MoonsenseClientConfig } from './MoonsenseClientConfig';
-import { bundle, common, controlplane, dataplane } from './models/generated/protos';
+import { bundle, common, controlplane, dataplane, google, journey_feedback } from './models/generated/protos';
 import { ListSessionConfig } from './models/ListSessionConfig';
 import { PaginatedSessionList } from './models/PaginatedSessionList';
 import { ControlPlaneClient } from './services/ControlPlaneClient';
@@ -160,6 +160,26 @@ export class MoonsenseClient {
     }
 
     /**
+     * Fetches the feedback associated with a journey with the specified journeyId.
+     * 
+     * @param sessionId The ID of the journey to fetch
+     */
+    public getJourneyFeedback(journeyId: string): Promise<journey_feedback.IJourneyFeedback> {
+        return this.getDataRegionClient(this.config.defaultRegion!).getJourneyFeedback(journeyId);
+    }
+
+    /**
+     * Sets the feedback associated with a journey with the specified journeyId.
+     * 
+     * @param sessionId The ID of the journey to fetch
+     * @param feedback The feedback to set. Feedback is additive. If the feedback type already
+     * exists, it will be overwritten. If the feedback type does not exist, it will be added.
+     */
+    public addJourneyFeedback(journeyId: string, feedback: journey_feedback.IJourneyFeedback): Promise<void> {
+        return this.getDataRegionClient(this.config.defaultRegion!).addJourneyFeedback(journeyId, feedback);
+    }
+
+    /**
      * ListSessions lists the sessions for the app associated with 
      * the provided secret token.
      * 
@@ -236,3 +256,10 @@ export class MoonsenseClient {
 }
 
 export default MoonsenseClient;
+
+export const timestampFromDate = (date: Date): google.protobuf.ITimestamp => {
+    return {
+        seconds: Math.floor(date.getTime() / 1000),
+        nanos: (date.getTime() % 1000) * 1000000,
+    };
+}
