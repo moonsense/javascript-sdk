@@ -7228,6 +7228,7 @@ $root.dataplane = (function() {
          * @property {number|null} [sensorSamplingRate] SessionConfig sensorSamplingRate
          * @property {number|null} [bundleGenerationIntervalMillis] SessionConfig bundleGenerationIntervalMillis
          * @property {Array.<common.SensorType>|null} [requestedSensors] SessionConfig requestedSensors
+         * @property {dataplane.INetworkTelemetryConfig|null} [networkTelemetryConfig] SessionConfig networkTelemetryConfig
          */
 
         /**
@@ -7287,6 +7288,14 @@ $root.dataplane = (function() {
         SessionConfig.prototype.requestedSensors = $util.emptyArray;
 
         /**
+         * SessionConfig networkTelemetryConfig.
+         * @member {dataplane.INetworkTelemetryConfig|null|undefined} networkTelemetryConfig
+         * @memberof dataplane.SessionConfig
+         * @instance
+         */
+        SessionConfig.prototype.networkTelemetryConfig = null;
+
+        /**
          * Creates a new SessionConfig instance using the specified properties.
          * @function create
          * @memberof dataplane.SessionConfig
@@ -7324,6 +7333,8 @@ $root.dataplane = (function() {
                     writer.int32(message.requestedSensors[i]);
                 writer.ldelim();
             }
+            if (message.networkTelemetryConfig != null && Object.hasOwnProperty.call(message, "networkTelemetryConfig"))
+                $root.dataplane.NetworkTelemetryConfig.encode(message.networkTelemetryConfig, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             return writer;
         };
 
@@ -7367,6 +7378,9 @@ $root.dataplane = (function() {
                     } else
                         message.requestedSensors.push(reader.int32());
                     break;
+                case 6:
+                    message.networkTelemetryConfig = $root.dataplane.NetworkTelemetryConfig.decode(reader, reader.uint32());
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -7376,6 +7390,113 @@ $root.dataplane = (function() {
         };
 
         return SessionConfig;
+    })();
+
+    dataplane.NetworkTelemetryConfig = (function() {
+
+        /**
+         * Properties of a NetworkTelemetryConfig.
+         * @memberof dataplane
+         * @interface INetworkTelemetryConfig
+         * @property {number|null} [ipv4CaptureAttempts] NetworkTelemetryConfig ipv4CaptureAttempts
+         * @property {number|null} [ipv6CaptureAttempts] NetworkTelemetryConfig ipv6CaptureAttempts
+         */
+
+        /**
+         * Constructs a new NetworkTelemetryConfig.
+         * @memberof dataplane
+         * @classdesc Represents a NetworkTelemetryConfig.
+         * @implements INetworkTelemetryConfig
+         * @constructor
+         * @param {dataplane.INetworkTelemetryConfig=} [properties] Properties to set
+         */
+        function NetworkTelemetryConfig(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * NetworkTelemetryConfig ipv4CaptureAttempts.
+         * @member {number} ipv4CaptureAttempts
+         * @memberof dataplane.NetworkTelemetryConfig
+         * @instance
+         */
+        NetworkTelemetryConfig.prototype.ipv4CaptureAttempts = 0;
+
+        /**
+         * NetworkTelemetryConfig ipv6CaptureAttempts.
+         * @member {number} ipv6CaptureAttempts
+         * @memberof dataplane.NetworkTelemetryConfig
+         * @instance
+         */
+        NetworkTelemetryConfig.prototype.ipv6CaptureAttempts = 0;
+
+        /**
+         * Creates a new NetworkTelemetryConfig instance using the specified properties.
+         * @function create
+         * @memberof dataplane.NetworkTelemetryConfig
+         * @static
+         * @param {dataplane.INetworkTelemetryConfig=} [properties] Properties to set
+         * @returns {dataplane.NetworkTelemetryConfig} NetworkTelemetryConfig instance
+         */
+        NetworkTelemetryConfig.create = function create(properties) {
+            return new NetworkTelemetryConfig(properties);
+        };
+
+        /**
+         * Encodes the specified NetworkTelemetryConfig message. Does not implicitly {@link dataplane.NetworkTelemetryConfig.verify|verify} messages.
+         * @function encode
+         * @memberof dataplane.NetworkTelemetryConfig
+         * @static
+         * @param {dataplane.INetworkTelemetryConfig} message NetworkTelemetryConfig message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        NetworkTelemetryConfig.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ipv4CaptureAttempts != null && Object.hasOwnProperty.call(message, "ipv4CaptureAttempts"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.ipv4CaptureAttempts);
+            if (message.ipv6CaptureAttempts != null && Object.hasOwnProperty.call(message, "ipv6CaptureAttempts"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.ipv6CaptureAttempts);
+            return writer;
+        };
+
+        /**
+         * Decodes a NetworkTelemetryConfig message from the specified reader or buffer.
+         * @function decode
+         * @memberof dataplane.NetworkTelemetryConfig
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {dataplane.NetworkTelemetryConfig} NetworkTelemetryConfig
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        NetworkTelemetryConfig.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.dataplane.NetworkTelemetryConfig();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.ipv4CaptureAttempts = reader.int32();
+                    break;
+                case 2:
+                    message.ipv6CaptureAttempts = reader.int32();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return NetworkTelemetryConfig;
     })();
 
     dataplane.SessionLabel = (function() {
@@ -12748,6 +12869,409 @@ $root.v2 = (function() {
     })();
 
     return v2;
+})();
+
+$root.journey_feedback = (function() {
+
+    /**
+     * Namespace journey_feedback.
+     * @exports journey_feedback
+     * @namespace
+     */
+    var journey_feedback = {};
+
+    journey_feedback.FraudFeedback = (function() {
+
+        /**
+         * Properties of a FraudFeedback.
+         * @memberof journey_feedback
+         * @interface IFraudFeedback
+         * @property {string|null} [feedbackId] FraudFeedback feedbackId
+         * @property {boolean|null} [isFraud] FraudFeedback isFraud
+         * @property {google.protobuf.ITimestamp|null} [reportedAt] FraudFeedback reportedAt
+         * @property {string|null} [fraudReason] FraudFeedback fraudReason
+         */
+
+        /**
+         * Constructs a new FraudFeedback.
+         * @memberof journey_feedback
+         * @classdesc Represents a FraudFeedback.
+         * @implements IFraudFeedback
+         * @constructor
+         * @param {journey_feedback.IFraudFeedback=} [properties] Properties to set
+         */
+        function FraudFeedback(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * FraudFeedback feedbackId.
+         * @member {string} feedbackId
+         * @memberof journey_feedback.FraudFeedback
+         * @instance
+         */
+        FraudFeedback.prototype.feedbackId = "";
+
+        /**
+         * FraudFeedback isFraud.
+         * @member {boolean} isFraud
+         * @memberof journey_feedback.FraudFeedback
+         * @instance
+         */
+        FraudFeedback.prototype.isFraud = false;
+
+        /**
+         * FraudFeedback reportedAt.
+         * @member {google.protobuf.ITimestamp|null|undefined} reportedAt
+         * @memberof journey_feedback.FraudFeedback
+         * @instance
+         */
+        FraudFeedback.prototype.reportedAt = null;
+
+        /**
+         * FraudFeedback fraudReason.
+         * @member {string} fraudReason
+         * @memberof journey_feedback.FraudFeedback
+         * @instance
+         */
+        FraudFeedback.prototype.fraudReason = "";
+
+        /**
+         * Creates a new FraudFeedback instance using the specified properties.
+         * @function create
+         * @memberof journey_feedback.FraudFeedback
+         * @static
+         * @param {journey_feedback.IFraudFeedback=} [properties] Properties to set
+         * @returns {journey_feedback.FraudFeedback} FraudFeedback instance
+         */
+        FraudFeedback.create = function create(properties) {
+            return new FraudFeedback(properties);
+        };
+
+        /**
+         * Encodes the specified FraudFeedback message. Does not implicitly {@link journey_feedback.FraudFeedback.verify|verify} messages.
+         * @function encode
+         * @memberof journey_feedback.FraudFeedback
+         * @static
+         * @param {journey_feedback.IFraudFeedback} message FraudFeedback message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        FraudFeedback.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.feedbackId != null && Object.hasOwnProperty.call(message, "feedbackId"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.feedbackId);
+            if (message.isFraud != null && Object.hasOwnProperty.call(message, "isFraud"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isFraud);
+            if (message.reportedAt != null && Object.hasOwnProperty.call(message, "reportedAt"))
+                $root.google.protobuf.Timestamp.encode(message.reportedAt, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.fraudReason != null && Object.hasOwnProperty.call(message, "fraudReason"))
+                writer.uint32(/* id 4, wireType 2 =*/34).string(message.fraudReason);
+            return writer;
+        };
+
+        /**
+         * Decodes a FraudFeedback message from the specified reader or buffer.
+         * @function decode
+         * @memberof journey_feedback.FraudFeedback
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {journey_feedback.FraudFeedback} FraudFeedback
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        FraudFeedback.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.journey_feedback.FraudFeedback();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.feedbackId = reader.string();
+                    break;
+                case 2:
+                    message.isFraud = reader.bool();
+                    break;
+                case 3:
+                    message.reportedAt = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.fraudReason = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return FraudFeedback;
+    })();
+
+    journey_feedback.ChargebackFeedback = (function() {
+
+        /**
+         * Properties of a ChargebackFeedback.
+         * @memberof journey_feedback
+         * @interface IChargebackFeedback
+         * @property {string|null} [feedbackId] ChargebackFeedback feedbackId
+         * @property {boolean|null} [isChargeback] ChargebackFeedback isChargeback
+         * @property {google.protobuf.ITimestamp|null} [reportedAt] ChargebackFeedback reportedAt
+         * @property {string|null} [chargebackReason] ChargebackFeedback chargebackReason
+         */
+
+        /**
+         * Constructs a new ChargebackFeedback.
+         * @memberof journey_feedback
+         * @classdesc Represents a ChargebackFeedback.
+         * @implements IChargebackFeedback
+         * @constructor
+         * @param {journey_feedback.IChargebackFeedback=} [properties] Properties to set
+         */
+        function ChargebackFeedback(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * ChargebackFeedback feedbackId.
+         * @member {string} feedbackId
+         * @memberof journey_feedback.ChargebackFeedback
+         * @instance
+         */
+        ChargebackFeedback.prototype.feedbackId = "";
+
+        /**
+         * ChargebackFeedback isChargeback.
+         * @member {boolean} isChargeback
+         * @memberof journey_feedback.ChargebackFeedback
+         * @instance
+         */
+        ChargebackFeedback.prototype.isChargeback = false;
+
+        /**
+         * ChargebackFeedback reportedAt.
+         * @member {google.protobuf.ITimestamp|null|undefined} reportedAt
+         * @memberof journey_feedback.ChargebackFeedback
+         * @instance
+         */
+        ChargebackFeedback.prototype.reportedAt = null;
+
+        /**
+         * ChargebackFeedback chargebackReason.
+         * @member {string} chargebackReason
+         * @memberof journey_feedback.ChargebackFeedback
+         * @instance
+         */
+        ChargebackFeedback.prototype.chargebackReason = "";
+
+        /**
+         * Creates a new ChargebackFeedback instance using the specified properties.
+         * @function create
+         * @memberof journey_feedback.ChargebackFeedback
+         * @static
+         * @param {journey_feedback.IChargebackFeedback=} [properties] Properties to set
+         * @returns {journey_feedback.ChargebackFeedback} ChargebackFeedback instance
+         */
+        ChargebackFeedback.create = function create(properties) {
+            return new ChargebackFeedback(properties);
+        };
+
+        /**
+         * Encodes the specified ChargebackFeedback message. Does not implicitly {@link journey_feedback.ChargebackFeedback.verify|verify} messages.
+         * @function encode
+         * @memberof journey_feedback.ChargebackFeedback
+         * @static
+         * @param {journey_feedback.IChargebackFeedback} message ChargebackFeedback message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        ChargebackFeedback.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.feedbackId != null && Object.hasOwnProperty.call(message, "feedbackId"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.feedbackId);
+            if (message.isChargeback != null && Object.hasOwnProperty.call(message, "isChargeback"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isChargeback);
+            if (message.reportedAt != null && Object.hasOwnProperty.call(message, "reportedAt"))
+                $root.google.protobuf.Timestamp.encode(message.reportedAt, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.chargebackReason != null && Object.hasOwnProperty.call(message, "chargebackReason"))
+                writer.uint32(/* id 4, wireType 2 =*/34).string(message.chargebackReason);
+            return writer;
+        };
+
+        /**
+         * Decodes a ChargebackFeedback message from the specified reader or buffer.
+         * @function decode
+         * @memberof journey_feedback.ChargebackFeedback
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {journey_feedback.ChargebackFeedback} ChargebackFeedback
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        ChargebackFeedback.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.journey_feedback.ChargebackFeedback();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.feedbackId = reader.string();
+                    break;
+                case 2:
+                    message.isChargeback = reader.bool();
+                    break;
+                case 3:
+                    message.reportedAt = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.chargebackReason = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return ChargebackFeedback;
+    })();
+
+    journey_feedback.JourneyFeedback = (function() {
+
+        /**
+         * Properties of a JourneyFeedback.
+         * @memberof journey_feedback
+         * @interface IJourneyFeedback
+         * @property {string|null} [journeyId] JourneyFeedback journeyId
+         * @property {journey_feedback.IFraudFeedback|null} [fraudFeedback] JourneyFeedback fraudFeedback
+         * @property {journey_feedback.IChargebackFeedback|null} [chargebackFeedback] JourneyFeedback chargebackFeedback
+         */
+
+        /**
+         * Constructs a new JourneyFeedback.
+         * @memberof journey_feedback
+         * @classdesc Represents a JourneyFeedback.
+         * @implements IJourneyFeedback
+         * @constructor
+         * @param {journey_feedback.IJourneyFeedback=} [properties] Properties to set
+         */
+        function JourneyFeedback(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * JourneyFeedback journeyId.
+         * @member {string} journeyId
+         * @memberof journey_feedback.JourneyFeedback
+         * @instance
+         */
+        JourneyFeedback.prototype.journeyId = "";
+
+        /**
+         * JourneyFeedback fraudFeedback.
+         * @member {journey_feedback.IFraudFeedback|null|undefined} fraudFeedback
+         * @memberof journey_feedback.JourneyFeedback
+         * @instance
+         */
+        JourneyFeedback.prototype.fraudFeedback = null;
+
+        /**
+         * JourneyFeedback chargebackFeedback.
+         * @member {journey_feedback.IChargebackFeedback|null|undefined} chargebackFeedback
+         * @memberof journey_feedback.JourneyFeedback
+         * @instance
+         */
+        JourneyFeedback.prototype.chargebackFeedback = null;
+
+        /**
+         * Creates a new JourneyFeedback instance using the specified properties.
+         * @function create
+         * @memberof journey_feedback.JourneyFeedback
+         * @static
+         * @param {journey_feedback.IJourneyFeedback=} [properties] Properties to set
+         * @returns {journey_feedback.JourneyFeedback} JourneyFeedback instance
+         */
+        JourneyFeedback.create = function create(properties) {
+            return new JourneyFeedback(properties);
+        };
+
+        /**
+         * Encodes the specified JourneyFeedback message. Does not implicitly {@link journey_feedback.JourneyFeedback.verify|verify} messages.
+         * @function encode
+         * @memberof journey_feedback.JourneyFeedback
+         * @static
+         * @param {journey_feedback.IJourneyFeedback} message JourneyFeedback message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        JourneyFeedback.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.journeyId != null && Object.hasOwnProperty.call(message, "journeyId"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.journeyId);
+            if (message.fraudFeedback != null && Object.hasOwnProperty.call(message, "fraudFeedback"))
+                $root.journey_feedback.FraudFeedback.encode(message.fraudFeedback, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.chargebackFeedback != null && Object.hasOwnProperty.call(message, "chargebackFeedback"))
+                $root.journey_feedback.ChargebackFeedback.encode(message.chargebackFeedback, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Decodes a JourneyFeedback message from the specified reader or buffer.
+         * @function decode
+         * @memberof journey_feedback.JourneyFeedback
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {journey_feedback.JourneyFeedback} JourneyFeedback
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        JourneyFeedback.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.journey_feedback.JourneyFeedback();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.journeyId = reader.string();
+                    break;
+                case 3:
+                    message.fraudFeedback = $root.journey_feedback.FraudFeedback.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.chargebackFeedback = $root.journey_feedback.ChargebackFeedback.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        return JourneyFeedback;
+    })();
+
+    return journey_feedback;
 })();
 
 module.exports = $root;

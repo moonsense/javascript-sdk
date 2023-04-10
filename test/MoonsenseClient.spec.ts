@@ -15,12 +15,12 @@
 
 jest.mock('node-fetch', ()=>jest.fn())
 
-import { MoonsenseClient } from '../src/MoonsenseClient';
+import { MoonsenseClient, timestampFromDate } from '../src/MoonsenseClient';
 import { MoonsenseClientConfig } from '../src/MoonsenseClientConfig';
 import fetch, {
     Response,
 } from 'node-fetch';
-import { common, controlplane, dataplane, google } from '../src/models/generated/protos';
+import { common, controlplane, dataplane, google, journey_feedback } from '../src/models/generated/protos';
 import fs from 'fs';
 
 describe('Client', () => {
@@ -276,6 +276,54 @@ describe('Client', () => {
                 expect(request2?.method).toEqual('GET');
 
             });
+
+            it('should handle pagination - nextPage error', async () => {
+                const response1 = dataplane.JourneyListResponse.encode({
+                    journeys: [
+                    ],
+                    pagination: {
+                        nextPage: 1,
+                    }
+                }).finish();
+                mockRequest(response1);
+
+                const client = new MoonsenseClient({secretToken: 'test'});
+                const result = await client.listJourneys();
+                
+                expect(result.hasMore).toBe(true);
+
+                expect(
+                    result.nextPage()
+                ).rejects.toThrow('Could not determine the last journey creation date');
+
+            });
+
+            it('should limit max journeys per page', async () => {
+                const response1 = dataplane.JourneyListResponse.encode({
+                    journeys: [
+                        {
+                            journeyId: 'journey1',
+                            sessionCount: 1,
+                        },
+                    ],
+                    pagination: {
+                        nextPage: 1,
+                    }
+                }).finish();
+                mockRequest(response1);
+
+                const client = new MoonsenseClient({secretToken: 'test'});
+                await client.listJourneys({
+                    journeysPerPage: 100000,
+                });
+
+                expect(mockFetch).toHaveBeenCalledTimes(1);
+                const calls = mockFetch.mock.calls;
+                const url = calls[0][0];
+                const request = calls[0][1];
+                expect(url).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys?per_page=100');
+                expect(request?.method).toEqual('GET');
+            });
         });
 
         it('should describe journey', async () => {
@@ -297,6 +345,60 @@ describe('Client', () => {
             const request = calls[0][1];
             expect(url).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys/abc');
             expect(request?.method).toEqual('GET');
+        });
+
+        it('should get journey feedback', async () => {
+            const response = journey_feedback.JourneyFeedback.encode({
+                fraudFeedback: {
+                    isFraud: true,
+                },
+            }).finish();
+            mockRequest(response);
+
+            const client = new MoonsenseClient({secretToken: 'test'});
+            const result = await client.getJourneyFeedback('abc');
+
+            expect(result.fraudFeedback?.isFraud).toBe(true);
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
+            const calls = mockFetch.mock.calls;
+            const url = calls[0][0];
+            const request = calls[0][1];
+            expect(url).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys/abc/feedback');
+            expect(request?.method).toEqual('GET');
+        });
+
+        it('should add journey feedback', async () => {
+            mockRequest();
+
+            const client = new MoonsenseClient({secretToken: 'test'});
+            await client.addJourneyFeedback('abc', {
+                fraudFeedback: {
+                    isFraud: true,
+                }
+            });
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
+            const calls = mockFetch.mock.calls;
+            const url = calls[0][0];
+            const request = calls[0][1];
+            expect(url).toEqual('https://us-central1.gcp.data-api.moonsense.cloud/v2/journeys/abc/feedback');
+            expect(request?.method).toEqual('POST');
+
+            const decodeBody = journey_feedback.JourneyFeedback.decode(request!.body as Uint8Array);
+            expect(decodeBody.fraudFeedback?.isFraud).toBe(true);
+        });
+
+        it('should add journey feedback - error', async () => {
+            mockRequest(undefined, 400);
+
+            const client = new MoonsenseClient({secretToken: 'test'});
+
+            expect(client.addJourneyFeedback('abc', {
+                fraudFeedback: {
+                    isFraud: true,
+                }
+            })).rejects.toThrow();
         });
 
         describe('list sessions', () => {
@@ -514,6 +616,27 @@ describe('Client', () => {
                 expect(request2?.method).toEqual('GET');
 
             });
+
+            it('should handle pagination - nextPage error - no sessions', async () => {
+                const response1 = dataplane.SessionListResponse.encode({
+                    sessions: [
+                    ],
+                    pagination: {
+                        nextPage: 1,
+                    }
+                }).finish();
+                mockRequest(response1);
+
+                const client = new MoonsenseClient({secretToken: 'test'});
+                const result = await client.listSessions();
+                
+                expect(result.hasMore).toBe(true);
+                
+                expect(
+                    result.nextPage()
+                ).rejects.toThrowError('Could not determine the last session creation date');
+
+            });
         });
 
         it('should describe session with full view', async () => {
@@ -699,6 +822,25 @@ describe('Client', () => {
             expect(decodeBody.labels[0].name).toBe('label1');
             expect(decodeBody.labels[1].name).toBe('label2');
         });
+
+        it('should update session labels - error', async () => {
+            mockRequest(undefined, 400);
+
+            const client = new MoonsenseClient({secretToken: 'test'});
+            expect(
+                client.updateSessionLabels('abc', ['label1', 'label2']
+            )).rejects.toThrow();
+        });
     });
     
+});
+
+describe('timestampFromDate', () => {
+    it('should convert date to timestamp', () => {
+        const date = new Date('2021-01-01T00:00:00.001Z');
+        const timestamp = timestampFromDate(date);
+
+        expect(timestamp.seconds).toBe(1609459200);
+        expect(timestamp.nanos).toBe(1000000);
+    });
 });

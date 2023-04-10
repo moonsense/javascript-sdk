@@ -56,6 +56,24 @@ console.log(signals);
 
 ```
 
+### Add Journey Feedback
+
+Adding feedback to journeys provides a mechanism for tracking some special details against a given journey. For example, if a journey is determined to contain fraud, the journey can be flagged as fraudulent using Journey Feedback.
+
+```typescript
+await client.addJourneyFeedback('<journey-id>', {
+    fraudFeedback: {
+        isFraud: true,
+        reportedAt: timestampFromDate(new Date()),
+        fraudReason: "It was fraud because...",
+    }
+});
+```
+
+`timestampFromDate(...)` is a helper method provided to simplify conversions between Javascript dates and the protobuf timestamp expected.
+
+Other supported feedback types can be found by looking at the `journey_feedback.IJourneyFeedback` type definition.
+
 ## Terms Of Service
 
 The Moonsense Go SDK is distributed under the [Moonsense Terms Of Service](https://www.moonsense.io/terms-of-service).

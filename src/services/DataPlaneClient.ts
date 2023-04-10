@@ -14,7 +14,7 @@
 
 import { decompressSync } from 'fflate';
 import { MoonsenseClientConfig } from '../MoonsenseClientConfig';
-import { bundle, common, dataplane } from '../models/generated/protos';
+import { bundle, common, dataplane, journey_feedback } from '../models/generated/protos';
 import { ListSessionConfig } from '../models/ListSessionConfig';
 import { ListJourneyConfig } from '../models/ListJourneyConfig';
 import { ApiClient } from './ApiClient';
@@ -90,6 +90,24 @@ export class DataPlaneClient extends ApiClient {
             .then(resp => this.processResponse(resp))
             .then(data => dataplane.JourneyDetailResponse.decode(new Uint8Array(data))
         );
+    }
+
+    public getJourneyFeedback(journeyId: string): Promise<journey_feedback.JourneyFeedback> {
+        return this.get(this.version + `/journeys/${journeyId}/feedback`)
+            .then(resp => this.processResponse(resp))
+            .then(data => journey_feedback.JourneyFeedback.decode(new Uint8Array(data))
+        );
+    }
+
+    public addJourneyFeedback(journeyId: string, feedback: journey_feedback.IJourneyFeedback): Promise<void> {
+        const body = journey_feedback.JourneyFeedback.encode(feedback).finish();
+
+        return this.post(this.version + `/journeys/${journeyId}/feedback`, body)
+            .then(resp => {
+                if (!resp.ok) {
+                    throw new Error(`request failed: ${resp.status} ${resp.statusText}`);
+                }
+            });
     }
 
     public listSessions(config: ListSessionConfig): Promise<dataplane.SessionListResponse> {
